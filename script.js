@@ -14,6 +14,8 @@ const videoList = [
 ];
 
 let currentVideoIndex = 0;
+let closeOnEscHandler = null;
+let keyHandlerForVideo = null;
 
 function openVideoModal() {
   currentVideoIndex = 0;
@@ -91,17 +93,22 @@ function createVideoModal() {
   document.body.appendChild(overlay);
   document.body.style.overflow = 'hidden';
   
-  // Close on Escape
-  const closeOnEsc = (e) => {
+  // Close on Escape - Remove old handler first
+  if (closeOnEscHandler) {
+    document.removeEventListener('keydown', closeOnEscHandler);
+  }
+  closeOnEscHandler = (e) => {
     if (e.key === 'Escape') {
       closeVideoModal();
-      document.removeEventListener('keydown', closeOnEsc);
     }
   };
-  document.addEventListener('keydown', closeOnEsc);
+  document.addEventListener('keydown', closeOnEscHandler);
   
-  // Keyboard navigation
-  const keyHandler = (e) => {
+  // Keyboard navigation - Remove old handler first
+  if (keyHandlerForVideo) {
+    document.removeEventListener('keydown', keyHandlerForVideo);
+  }
+  keyHandlerForVideo = (e) => {
     if (document.getElementById('video-modal')) {
       if (e.key === 'ArrowRight' || e.key === ' ') {
         e.preventDefault();
@@ -113,7 +120,7 @@ function createVideoModal() {
       }
     }
   };
-  document.addEventListener('keydown', keyHandler);
+  document.addEventListener('keydown', keyHandlerForVideo);
 }
 
 function prevVideo() {
@@ -150,6 +157,16 @@ function closeVideoModal() {
     }
     modal.remove();
     document.body.style.overflow = 'auto';
+    
+    // Remove event listeners
+    if (closeOnEscHandler) {
+      document.removeEventListener('keydown', closeOnEscHandler);
+      closeOnEscHandler = null;
+    }
+    if (keyHandlerForVideo) {
+      document.removeEventListener('keydown', keyHandlerForVideo);
+      keyHandlerForVideo = null;
+    }
   }
 }
 
@@ -215,14 +232,22 @@ function showModal(title, message, onConfirm = null) {
   }, 5000);
 }
 
-// Mobile menu toggle
-const mobileToggle = document.getElementById('mobile-toggle');
-const mobileMenu = document.getElementById('mobile-menu');
-mobileToggle.addEventListener('click', function() {
-  mobileMenu.classList.toggle('open');
+// Mobile menu toggle - Initialize only once
+document.addEventListener('DOMContentLoaded', () => {
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', function() {
+      mobileMenu.classList.toggle('open');
+    });
+  }
 });
+
 function closeMobileMenu() {
-  mobileMenu.classList.remove('open');
+  const mobileMenu = document.getElementById('mobile-menu');
+  if (mobileMenu) {
+    mobileMenu.classList.remove('open');
+  }
 }
 
 // Email signup handler
@@ -242,82 +267,93 @@ function handleEmailSignup(btn) {
     btn.style.background = 'linear-gradient(135deg,#16A34A,#22C55E)';
     input.disabled = true;
     btn.classList.remove('btn-loading');
-    showToast(`Chúng tôi sẽ gửi thông tin sớm tới ${input.value}`, 'success');
+    showToast(`Cảm ơn bạn đã đăng ký! Chúng tôi sẽ gửi thông tin sớm tới ${input.value}`, 'success');
   }, 800);
 }
 
-// Button click handlers
+// Scroll to top function
+function scrollToTop() {
+  const wrapper = document.querySelector('.app-wrapper');
+  if (wrapper) {
+    wrapper.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// Button click handlers - Initialize only once
+let buttonsInitialized = false;
+
 function addButtonHandlers() {
-  // CTA Buttons
+  if (buttonsInitialized) return;
+  buttonsInitialized = true;
+  
+  // CTA Buttons - Exclude email signup buttons
   const ctaButtons = document.querySelectorAll('.btn-primary, .btn-outline-white, .btn-ghost');
   ctaButtons.forEach(btn => {
-    if (!btn.hasClickHandler) {
-      btn.addEventListener('click', function(e) {
-        const text = this.textContent.trim();
-        // Add loading animation
-        const originalText = this.textContent;
-        this.classList.add('btn-loading');
-        this.disabled = true;
-        
-        setTimeout(() => {
-          this.classList.remove('btn-loading');
-          this.disabled = false;
-          this.textContent = originalText;
-        }, 800);
-        
-        if (text.includes('Tải App') || text.includes('Khám phá')) {
-          showToast('Tính năng sắp có mặt! Vui lòng theo dõi...', 'info');
-        } else if (text.includes('Xem review')) {
-          openVideoModal();
-        } else if (text.includes('Đặt chỗ')) {
-          showModal('Đặt chỗ sử dụng Pod', 'Mở ứng dụng Restioo để đặt chỗ ngay. Hiện tại, tính năng đặt chỗ trực tuyến đang trong giai đoạn beta.', 'showToast("Đã chuyển hướng tới app!", "info")');
-        } else if (text.includes('Liên lạc') || text.includes('Liên hệ')) {
-          showToast('Email được sao chép: contact@restioo.vn', 'success');
-          navigator.clipboard.writeText('contact@restioo.vn');
-        } else if (text.includes('B2B')) {
-          showModal('Hợp tác B2B', 'Email hợp tác: partner@restioo.vn\n\nChúng tôi sẽ liên hệ bạn sớm nhất!', 'showToast("Email hợp tác được sao chép", "success")');
-          navigator.clipboard.writeText('partner@restioo.vn');
-        } else if (text.includes('Liên hệ') || text.includes('Đăng ký')) {
-          showToast('Cảm ơn bạn quan tâm! Chúng tôi sẽ liên hệ sớm.', 'success');
-        }
-        this.hasClickHandler = true;
-      });
-    }
+    // Skip email signup buttons
+    if (btn.classList.contains('email-signup-btn')) return;
+    
+    btn.addEventListener('click', function(e) {
+      const text = this.textContent.trim();
+      // Add loading animation
+      const originalText = this.textContent;
+      this.classList.add('btn-loading');
+      this.disabled = true;
+      
+      setTimeout(() => {
+        this.classList.remove('btn-loading');
+        this.disabled = false;
+        this.textContent = originalText;
+      }, 800);
+      
+      if (text.includes('Tải App') || text.includes('Khám phá')) {
+        showToast('Tính năng sắp có mặt! Vui lòng theo dõi...', 'info');
+      } else if (text.includes('Xem review')) {
+        openVideoModal();
+      } else if (text.includes('Đặt chỗ')) {
+        showModal('Đặt chỗ sử dụng Pod', 'Mở ứng dụng Restioo để đặt chỗ ngay. Hiện tại, tính năng đặt chỗ trực tuyến đang trong giai đoạn beta.', 'showToast("Đã chuyển hướng tới app!", "info")');
+      } else if (text.includes('Liên lạc') || text.includes('Liên hệ')) {
+        showToast('Email được sao chép: contact@restioo.vn', 'success');
+        navigator.clipboard.writeText('contact@restioo.vn');
+      } else if (text.includes('B2B')) {
+        showModal('Hợp tác B2B', 'Email hợp tác: partner@restioo.vn\n\nChúng tôi sẽ liên hệ bạn sớm nhất!', 'showToast("Email hợp tác được sao chép", "success")');
+        navigator.clipboard.writeText('partner@restioo.vn');
+      } else if (text.includes('Liên hệ') || text.includes('Đăng ký')) {
+        showToast('Cảm ơn bạn quan tâm! Chúng tôi sẽ liên hệ sớm.', 'success');
+      }
+    });
   });
   
   // Email input handlers - Better focus states
   const emailInputs = document.querySelectorAll('input[type="email"]');
   emailInputs.forEach(input => {
-    if (!input.hasEmailHandler) {
-      input.addEventListener('focus', function() {
-        this.style.borderColor = 'rgba(91,191,214,0.6)';
-        this.style.boxShadow = '0 0 0 3px rgba(91,191,214,0.1)';
-      });
-      input.addEventListener('blur', function() {
-        if (!this.value) {
-          this.style.borderColor = 'rgba(91,191,214,0.15)';
-          this.style.boxShadow = 'none';
-        }
-      });
-      input.hasEmailHandler = true;
-    }
+    input.addEventListener('focus', function() {
+      this.style.borderColor = 'rgba(91,191,214,0.6)';
+      this.style.boxShadow = '0 0 0 3px rgba(91,191,214,0.1)';
+    });
+    input.addEventListener('blur', function() {
+      if (!this.value) {
+        this.style.borderColor = 'rgba(91,191,214,0.15)';
+        this.style.boxShadow = 'none';
+      }
+    });
   });
 }
 
 // Initialize button handlers when page loads
-setTimeout(addButtonHandlers, 500);
 document.addEventListener('DOMContentLoaded', addButtonHandlers);
 
-// Smooth scroll for nav links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      const wrapper = document.querySelector('.app-wrapper');
-      const targetOffset = target.getBoundingClientRect().top + wrapper.scrollTop - 80;
-      wrapper.scrollTo({ top: targetOffset, behavior: 'smooth' });
-    }
+// Smooth scroll for nav links - Initialize only once
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        const wrapper = document.querySelector('.app-wrapper');
+        const targetOffset = target.getBoundingClientRect().top + wrapper.scrollTop - 80;
+        wrapper.scrollTo({ top: targetOffset, behavior: 'smooth' });
+      }
+    });
   });
 });
 
@@ -349,6 +385,7 @@ const galleryImages = [
 ];
 
 let currentLightboxIndex = 0;
+let lightboxKeyHandler = null;
 
 function openLightbox(index) {
   currentLightboxIndex = index;
@@ -359,11 +396,31 @@ function openLightbox(index) {
   document.getElementById('lightbox-counter').textContent = `${index + 1} / ${galleryImages.length}`;
   lightbox.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  
+  // Add keyboard handler - Remove old one first
+  if (lightboxKeyHandler) {
+    document.removeEventListener('keydown', lightboxKeyHandler);
+  }
+  lightboxKeyHandler = (e) => {
+    const lightbox = document.getElementById('lightbox');
+    if (!lightbox.classList.contains('hidden')) {
+      if (e.key === 'ArrowRight') nextLightbox();
+      if (e.key === 'ArrowLeft') prevLightbox();
+      if (e.key === 'Escape') closeLightbox();
+    }
+  };
+  document.addEventListener('keydown', lightboxKeyHandler);
 }
 
 function closeLightbox() {
   document.getElementById('lightbox').classList.add('hidden');
   document.body.style.overflow = 'auto';
+  
+  // Remove keyboard handler
+  if (lightboxKeyHandler) {
+    document.removeEventListener('keydown', lightboxKeyHandler);
+    lightboxKeyHandler = null;
+  }
 }
 
 function nextLightbox() {
@@ -375,16 +432,6 @@ function prevLightbox() {
   currentLightboxIndex = (currentLightboxIndex - 1 + galleryImages.length) % galleryImages.length;
   openLightbox(currentLightboxIndex);
 }
-
-// Keyboard navigation for lightbox
-document.addEventListener('keydown', (e) => {
-  const lightbox = document.getElementById('lightbox');
-  if (!lightbox.classList.contains('hidden')) {
-    if (e.key === 'ArrowRight') nextLightbox();
-    if (e.key === 'ArrowLeft') prevLightbox();
-    if (e.key === 'Escape') closeLightbox();
-  }
-});
 
 // Initialize Lucide icons after lightbox setup
 setTimeout(() => lucide.createIcons(), 100);

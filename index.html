@@ -15,7 +15,7 @@
   <div class="app-wrapper"><!-- ====== NAVBAR ====== -->
    <nav class="nav-glass sticky top-0 z-50 py-4">
     <div class="max-w-7xl mx-auto px-6 flex items-center justify-between"><!-- Logo -->
-     <div class="flex items-center gap-2">
+     <div class="flex items-center gap-2 cursor-pointer" onclick="scrollToTop()">
       <div style="width:36px;height:36px;background:linear-gradient(135deg,#1E6B8A,#5BBFD6);border-radius:10px;display:flex;align-items:center;justify-content:center;">
        <svg width="20" height="20" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12C3 7.03 7.03 3 12 3s9 4.03 9 9-4.03 9-9 9" stroke="white" stroke-width="2" stroke-linecap="round" /> <path d="M7 12s1-3 5-3 5 3 5 3" stroke="white" stroke-width="2" stroke-linecap="round" /> <path d="M9 15h6" stroke="white" stroke-width="2" stroke-linecap="round" />
        </svg>
@@ -1285,7 +1285,7 @@
      <h2 id="cta-title" class="font-black text-white mb-5" style="font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-1px;line-height:1.2;">Sẵn sàng nghỉ ngơi<br>
       thông minh hơn?</h2>
      <p class="text-base mb-10" style="color:rgba(255,255,255,0.65);max-width:500px;margin-left:auto;margin-right:auto;">Đăng ký nhận thông báo ra mắt và nhận <strong style="color:#5BBFD6;">3 giờ sử dụng miễn phí</strong> cho 500 người dùng đầu tiên.</p><!-- Email capture (static demo) -->
-     <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-8"><input type="email" placeholder="Email của bạn" aria-label="Email đăng ký" class="flex-1 px-5 py-3.5 rounded-full text-sm outline-none border-none" style="background:rgba(255,255,255,0.1);color:white;border:1.5px solid rgba(91,191,214,0.35);" oninput="this.style.borderColor='rgba(91,191,214,0.6)'"> <button onclick="handleEmailSignup(this)" class="btn-primary px-7 py-3.5 rounded-full text-sm font-bold flex-shrink-0"> Đăng ký ngay </button>
+     <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-8"><input type="email" placeholder="Email của bạn" aria-label="Email đăng ký" class="flex-1 px-5 py-3.5 rounded-full text-sm outline-none border-none" style="background:rgba(255,255,255,0.1);color:white;border:1.5px solid rgba(91,191,214,0.35);" oninput="this.style.borderColor='rgba(91,191,214,0.6)'"> <button onclick="handleEmailSignup(this)" class="email-signup-btn btn-primary px-7 py-3.5 rounded-full text-sm font-bold flex-shrink-0"> Đăng ký ngay </button>
      </div>
      <p style="font-size:0.75rem;color:rgba(255,255,255,0.35);">Không spam. Chỉ thông báo khi Restioo ra mắt chính thức.</p>
      <div id="signup-success" class="hidden mt-4 px-5 py-3 rounded-full text-sm font-semibold" style="background:rgba(34,197,94,0.15);color:#4ADE80;border:1px solid rgba(34,197,94,0.3);display:none !important;">
