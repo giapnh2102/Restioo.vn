@@ -1,0 +1,1510 @@
+<!doctype html>
+<html lang="vi" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restioo – Ngủ Trưa Thông Minh</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&amp;family=Playfair+Display:ital,wght@0,700;1,600&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F0F4F8;
+      --surface: #FFFFFF;
+      --text: #1A2B3C;
+      --primary: #1E6B8A;
+      --accent: #5BBFD6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    .app-wrapper {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    .nav-glass {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(91,191,214,0.15);
+    }
+
+    /* HERO */
+    .hero-bg {
+      background: linear-gradient(135deg, #0D2B3E 0%, #1E4D6B 40%, #1E6B8A 70%, #2A8FA8 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -10%;
+      width: 60%;
+      height: 140%;
+      background: radial-gradient(ellipse, rgba(91,191,214,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      left: -5%;
+      width: 50%;
+      height: 80%;
+      background: radial-gradient(ellipse, rgba(30,107,138,0.3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-grid-pattern {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(91,191,214,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(91,191,214,0.06) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+
+    /* SLEEP POD ILLUSTRATION */
+    .pod-svg-wrap {
+      filter: drop-shadow(0 24px 48px rgba(0,0,0,0.35));
+    }
+
+    /* FLOATING BADGES */
+    .float-badge {
+      animation: floatY 4s ease-in-out infinite;
+    }
+    .float-badge:nth-child(2) { animation-delay: 1.5s; }
+    .float-badge:nth-child(3) { animation-delay: 3s; }
+
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* PULSE DOT */
+    .pulse-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #5BBFD6;
+      box-shadow: 0 0 0 0 rgba(91,191,214,0.6);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(91,191,214,0.6); }
+      70% { box-shadow: 0 0 0 10px rgba(91,191,214,0); }
+      100% { box-shadow: 0 0 0 0 rgba(91,191,214,0); }
+    }
+
+    /* CTA BUTTONS */
+    .btn-primary {
+      background: linear-gradient(135deg, #1E6B8A, #2A8FA8);
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #155a77, #1E6B8A);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(30,107,138,0.35);
+    }
+
+    .btn-outline-white {
+      background: transparent;
+      color: white;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-outline-white:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: white;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: #5BBFD6;
+      border: 1.5px solid #5BBFD6;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-ghost:hover {
+      background: rgba(91,191,214,0.1);
+      transform: translateY(-1px);
+    }
+
+    /* CARDS */
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      border: 1px solid rgba(91,191,214,0.12);
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(30,107,138,0.12);
+      border-color: rgba(91,191,214,0.35);
+    }
+
+    /* GRADIENT TEXT */
+    .gradient-text {
+      background: linear-gradient(135deg, #5BBFD6, #2A8FA8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* SECTION DIVIDER */
+    .section-divider {
+      width: 48px;
+      height: 3px;
+      background: linear-gradient(90deg, #1E6B8A, #5BBFD6);
+      border-radius: 2px;
+    }
+
+    /* STEP CONNECTOR */
+    .step-line {
+      width: 2px;
+      flex: 1;
+      background: linear-gradient(to bottom, #5BBFD6, rgba(91,191,214,0.15));
+      min-height: 40px;
+    }
+
+    /* COMPARISON TABLE */
+    .table-header-cell {
+      background: linear-gradient(135deg, #1E4D6B, #1E6B8A);
+    }
+    .table-restioo-col {
+      background: rgba(91,191,214,0.08);
+      border-left: 2px solid #5BBFD6;
+      border-right: 2px solid #5BBFD6;
+    }
+    .compare-row:nth-child(even) td { background: rgba(240,244,248,0.5); }
+    .compare-row:nth-child(even) td.restioo-td { background: rgba(91,191,214,0.1); }
+
+    /* PRICING */
+    .pricing-featured {
+      background: linear-gradient(160deg, #0D2B3E, #1E6B8A);
+      border: 2px solid #5BBFD6;
+    }
+
+    /* TECH GRID */
+    .tech-icon-wrap {
+      background: linear-gradient(135deg, rgba(30,107,138,0.12), rgba(91,191,214,0.08));
+      border: 1px solid rgba(91,191,214,0.2);
+      transition: all 0.3s;
+    }
+    .tech-icon-wrap:hover {
+      background: linear-gradient(135deg, rgba(30,107,138,0.22), rgba(91,191,214,0.15));
+      border-color: rgba(91,191,214,0.5);
+      transform: scale(1.05);
+    }
+
+    /* QUOTE SECTION */
+    .quote-bg {
+      background: linear-gradient(135deg, #0D2B3E 0%, #1A3D54 100%);
+    }
+
+    /* APP MOCKUP */
+    .phone-frame {
+      background: linear-gradient(160deg, #1A2B3C, #0D1E2C);
+      border: 2px solid rgba(91,191,214,0.3);
+      border-radius: 32px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.05);
+      overflow: hidden;
+    }
+
+    /* SCROLL FADE */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* MOBILE NAV */
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: block; }
+
+    @media (max-width: 768px) {
+      .hero-pod-col { display: none; }
+    }
+
+    /* SCROLLBAR */
+    .app-wrapper::-webkit-scrollbar { width: 6px; }
+    .app-wrapper::-webkit-scrollbar-track { background: #F0F4F8; }
+    .app-wrapper::-webkit-scrollbar-thumb { background: #5BBFD6; border-radius: 3px; }
+
+    /* CHECK ICON */
+    .check-green { color: #22C55E; }
+    .check-mid { color: #F59E0B; }
+    .check-no { color: #EF4444; }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div class="app-wrapper"><!-- ====== NAVBAR ====== -->
+   <nav class="nav-glass sticky top-0 z-50 py-4">
+    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between"><!-- Logo -->
+     <div class="flex items-center gap-2">
+      <div style="width:36px;height:36px;background:linear-gradient(135deg,#1E6B8A,#5BBFD6);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+       <svg width="20" height="20" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12C3 7.03 7.03 3 12 3s9 4.03 9 9-4.03 9-9 9" stroke="white" stroke-width="2" stroke-linecap="round" /> <path d="M7 12s1-3 5-3 5 3 5 3" stroke="white" stroke-width="2" stroke-linecap="round" /> <path d="M9 15h6" stroke="white" stroke-width="2" stroke-linecap="round" />
+       </svg>
+      </div><span id="nav-logo-text" style="font-family:'Be Vietnam Pro',sans-serif;font-weight:800;font-size:1.4rem;color:#1A2B3C;letter-spacing:-0.5px;">Restioo</span>
+     </div><!-- Desktop Nav -->
+     <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600"><a href="#about" class="hover:text-[#1E6B8A] transition-colors">Giới thiệu</a> <a href="#features" class="hover:text-[#1E6B8A] transition-colors">Tính năng</a> <a href="#how-it-works" class="hover:text-[#1E6B8A] transition-colors">Cách hoạt động</a> <a href="#pricing" class="hover:text-[#1E6B8A] transition-colors">Bảng giá</a> <a href="#locations" class="hover:text-[#1E6B8A] transition-colors">Địa điểm</a> <a href="#app" class="hover:text-[#1E6B8A] transition-colors">Ứng dụng</a>
+     </div><!-- CTA + Mobile -->
+     <div class="flex items-center gap-3"><button id="nav-cta" class="hidden md:block btn-primary px-5 py-2.5 rounded-full text-sm font-semibold">Tải App Sớm</button> <button id="mobile-toggle" class="md:hidden p-2 rounded-lg hover:bg-slate-100" aria-label="Menu"> <i data-lucide="menu" style="width:22px;height:22px;color:#1A2B3C;"></i> </button>
+     </div>
+    </div><!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden border-t border-slate-100 mt-3 pt-4 pb-4 px-6 space-y-3"><a href="#about" class="block text-sm font-medium text-slate-700 hover:text-[#1E6B8A] py-1" onclick="closeMobileMenu()">Giới thiệu</a> <a href="#features" class="block text-sm font-medium text-slate-700 hover:text-[#1E6B8A] py-1" onclick="closeMobileMenu()">Tính năng</a> <a href="#how-it-works" class="block text-sm font-medium text-slate-700 hover:text-[#1E6B8A] py-1" onclick="closeMobileMenu()">Cách hoạt động</a> <a href="#pricing" class="block text-sm font-medium text-slate-700 hover:text-[#1E6B8A] py-1" onclick="closeMobileMenu()">Bảng giá</a> <a href="#locations" class="block text-sm font-medium text-slate-700 hover:text-[#1E6B8A] py-1" onclick="closeMobileMenu()">Địa điểm</a> <a href="#app" class="block text-sm font-medium text-slate-700 hover:text-[#1E6B8A] py-1" onclick="closeMobileMenu()">Ứng dụng</a> <button class="btn-primary w-full py-3 rounded-xl text-sm font-semibold mt-2">Tải App Sớm</button>
+    </div>
+   </nav><!-- ====== HERO ====== -->
+   <section class="hero-bg" style="padding:80px 0 100px;">
+    <div class="hero-grid-pattern"></div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+     <div class="flex flex-col lg:flex-row items-center gap-16"><!-- Text Col -->
+      <div class="flex-1 text-white"><!-- Badge -->
+       <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full" style="background:rgba(91,191,214,0.15);border:1px solid rgba(91,191,214,0.35);">
+        <div class="pulse-dot"></div><span id="hero-badge" class="text-xs font-semibold tracking-wider uppercase text-[#5BBFD6]">Mô hình ngủ trưa thế hệ mới</span>
+       </div>
+       <h1 id="hero-headline" class="font-black leading-tight mb-6" style="font-size:clamp(2.4rem,5vw,3.8rem);letter-spacing:-1.5px;">Nghỉ Ngơi Thông Minh.<br><span style="background:linear-gradient(135deg,#5BBFD6,#A8E6F0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Sạc Năng Lượng</span><br>
+         Trong 30 Phút.</h1>
+       <p id="hero-subheadline" class="text-lg leading-relaxed mb-10" style="color:rgba(255,255,255,0.75);max-width:520px;">Restioo mang đến không gian nghỉ trưa riêng tư, sạch sẽ, tự động hóa hoàn toàn — ngay tại tòa nhà văn phòng, campus, trung tâm thương mại của bạn.</p><!-- CTA Row -->
+       <div class="flex flex-wrap gap-4 mb-12"><button id="hero-cta-1" class="btn-primary px-7 py-3.5 rounded-full text-base font-semibold flex items-center gap-2"> <i data-lucide="compass" style="width:18px;height:18px;"></i> <span>Khám phá dịch vụ</span> </button> <button id="hero-cta-2" class="btn-outline-white px-7 py-3.5 rounded-full text-base font-semibold flex items-center gap-2"> <i data-lucide="play-circle" style="width:18px;height:18px;"></i> <span>Xem cách hoạt động</span> </button>
+       </div><!-- Stats Row -->
+       <div class="flex flex-wrap gap-8">
+        <div>
+         <div class="text-3xl font-black text-white">
+          30<span class="text-[#5BBFD6]">+</span>
+         </div>
+         <div class="text-sm mt-0.5" style="color:rgba(255,255,255,0.55);">
+          Phút phục hồi
+         </div>
+        </div>
+        <div style="width:1px;background:rgba(255,255,255,0.15);"></div>
+        <div>
+         <div class="text-3xl font-black text-white">
+          100<span class="text-[#5BBFD6]">%</span>
+         </div>
+         <div class="text-sm mt-0.5" style="color:rgba(255,255,255,0.55);">
+          Riêng tư
+         </div>
+        </div>
+        <div style="width:1px;background:rgba(255,255,255,0.15);"></div>
+        <div>
+         <div class="text-3xl font-black text-white">
+          IoT
+         </div>
+         <div class="text-sm mt-0.5" style="color:rgba(255,255,255,0.55);">
+          Tự động hóa
+         </div>
+        </div>
+       </div>
+      </div><!-- Pod Illustration Col -->
+      <div class="hero-pod-col flex-1 flex items-center justify-center relative" style="min-height:420px;"><!-- Main Pod SVG -->
+       <div class="pod-svg-wrap relative z-10">
+        <svg width="380" height="320" viewbox="0 0 380 320" fill="none" xmlns="http://www.w3.org/2000/svg"><!-- Pod Body --> <ellipse cx="190" cy="245" rx="160" ry="18" fill="rgba(0,0,0,0.3)" /> <!-- Pod Shell --> <path d="M60 200 Q60 90 190 75 Q320 90 320 200 L320 240 Q320 265 190 270 Q60 265 60 240 Z" fill="url(#podGrad)" /> <!-- Pod Lid --> <path d="M60 200 Q60 90 190 75 Q320 90 320 200" fill="url(#lidGrad)" /> <!-- Inner Glow --> <path d="M80 200 Q80 105 190 92 Q300 105 300 200" fill="url(#innerGlow)" opacity="0.6" /> <!-- Window --> <ellipse cx="190" cy="160" rx="90" ry="65" fill="url(#windowGrad)" opacity="0.9" /> <ellipse cx="190" cy="160" rx="80" ry="57" fill="url(#windowInner)" /> <!-- Person silhouette inside --> <ellipse cx="190" cy="175" rx="55" ry="18" fill="rgba(91,191,214,0.15)" /> <rect x="150" y="145" width="80" height="10" rx="5" fill="rgba(91,191,214,0.25)" /> <ellipse cx="190" cy="142" rx="15" ry="14" fill="rgba(91,191,214,0.2)" /> <!-- LED strip --> <path d="M80 230 Q190 236 300 230" stroke="url(#ledGrad)" stroke-width="3" stroke-linecap="round" /> <!-- Control Panel --> <rect x="280" y="195" width="30" height="50" rx="6" fill="rgba(30,75,100,0.8)" /> <circle cx="295" cy="208" r="4" fill="#5BBFD6" opacity="0.9" /> <rect x="286" y="216" width="18" height="3" rx="1.5" fill="rgba(91,191,214,0.5)" /> <rect x="286" y="222" width="12" height="3" rx="1.5" fill="rgba(91,191,214,0.35)" /> <rect x="286" y="228" width="18" height="3" rx="1.5" fill="rgba(91,191,214,0.5)" /> <!-- Base --> <rect x="70" y="238" width="240" height="22" rx="8" fill="url(#baseGrad)" /> <!-- Feet --> <rect x="100" y="256" width="20" height="12" rx="4" fill="#0D2B3E" /> <rect x="260" y="256" width="20" height="12" rx="4" fill="#0D2B3E" /> <defs>
+          <lineargradient id="podGrad" x1="60" y1="75" x2="320" y2="270" gradientunits="userSpaceOnUse">
+           <stop offset="0%" stop-color="#1A3D54" />
+           <stop offset="100%" stop-color="#0D2232" />
+          </lineargradient>
+          <lineargradient id="lidGrad" x1="60" y1="75" x2="320" y2="200" gradientunits="userSpaceOnUse">
+           <stop offset="0%" stop-color="#2A6080" />
+           <stop offset="100%" stop-color="#1A3D54" />
+          </lineargradient>
+          <lineargradient id="innerGlow" x1="80" y1="92" x2="300" y2="200" gradientunits="userSpaceOnUse">
+           <stop offset="0%" stop-color="#5BBFD6" stop-opacity="0.3" />
+           <stop offset="100%" stop-color="#1E6B8A" stop-opacity="0.05" />
+          </lineargradient>
+          <radialgradient id="windowGrad" cx="50%" cy="45%" r="60%">
+           <stop offset="0%" stop-color="#5BBFD6" stop-opacity="0.35" />
+           <stop offset="100%" stop-color="#1A3D54" stop-opacity="0.6" />
+          </radialgradient>
+          <radialgradient id="windowInner" cx="50%" cy="40%" r="55%">
+           <stop offset="0%" stop-color="#A8E6F0" stop-opacity="0.15" />
+           <stop offset="100%" stop-color="#1A3D54" stop-opacity="0.4" />
+          </radialgradient>
+          <lineargradient id="ledGrad" x1="80" y1="230" x2="300" y2="230" gradientunits="userSpaceOnUse">
+           <stop offset="0%" stop-color="rgba(91,191,214,0.1)" />
+           <stop offset="50%" stop-color="#5BBFD6" />
+           <stop offset="100%" stop-color="rgba(91,191,214,0.1)" />
+          </lineargradient>
+          <lineargradient id="baseGrad" x1="70" y1="238" x2="310" y2="260" gradientunits="userSpaceOnUse">
+           <stop offset="0%" stop-color="#14364D" />
+           <stop offset="100%" stop-color="#0D2232" />
+          </lineargradient>
+         </defs>
+        </svg>
+       </div><!-- Floating Badges -->
+       <div class="float-badge absolute top-8 left-4 px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-2" style="background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);border:1px solid rgba(91,191,214,0.3);color:white;">
+        <div style="width:8px;height:8px;border-radius:50%;background:#22C55E;flex-shrink:0;box-shadow:0 0 0 3px rgba(34,197,94,0.25);"></div> Box đang trống
+       </div>
+       <div class="float-badge absolute top-20 right-0 px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-2" style="background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);border:1px solid rgba(91,191,214,0.3);color:white;"><i data-lucide="wifi" style="width:14px;height:14px;color:#5BBFD6;"></i> IoT Connected
+       </div>
+       <div class="float-badge absolute bottom-24 right-2 px-3 py-2 rounded-xl text-xs font-semibold" style="background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);border:1px solid rgba(91,191,214,0.3);color:white;">
+        🌡 22°C · 🔇 Yên tĩnh
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- ====== TRUST BAR ====== -->
+   <div style="background:#FFFFFF;border-bottom:1px solid rgba(91,191,214,0.12);">
+    <div class="max-w-6xl mx-auto px-6 py-5 flex flex-wrap items-center justify-center gap-8 text-sm text-slate-500 font-medium"><span class="flex items-center gap-2"><i data-lucide="shield-check" style="width:16px;height:16px;color:#1E6B8A;"></i> Riêng tư tuyệt đối</span> <span style="color:rgba(91,191,214,0.35);">|</span> <span class="flex items-center gap-2"><i data-lucide="zap" style="width:16px;height:16px;color:#1E6B8A;"></i> Tự động hóa 100%</span> <span style="color:rgba(91,191,214,0.35);">|</span> <span class="flex items-center gap-2"><i data-lucide="wind" style="width:16px;height:16px;color:#1E6B8A;"></i> Không khí sạch</span> <span style="color:rgba(91,191,214,0.35);">|</span> <span class="flex items-center gap-2"><i data-lucide="smartphone" style="width:16px;height:16px;color:#1E6B8A;"></i> Đặt chỗ qua app</span> <span style="color:rgba(91,191,214,0.35);">|</span> <span class="flex items-center gap-2"><i data-lucide="clock" style="width:16px;height:16px;color:#1E6B8A;"></i> Linh hoạt theo giờ</span>
+    </div>
+   </div><!-- ====== ABOUT ====== -->
+   <section id="about" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+     <div class="flex flex-col lg:flex-row items-center gap-16"><!-- Left: Decorative -->
+      <div class="flex-1 relative hidden lg:flex justify-center">
+       <div class="relative" style="width:380px;height:380px;"><!-- Concentric circles -->
+        <div class="absolute inset-0 rounded-full" style="border:1px solid rgba(91,191,214,0.1);"></div>
+        <div class="absolute" style="inset:30px;border-radius:50%;border:1px solid rgba(91,191,214,0.18);"></div>
+        <div class="absolute" style="inset:60px;border-radius:50%;border:1px solid rgba(91,191,214,0.25);"></div><!-- Center Card -->
+        <div class="absolute" style="inset:80px;background:linear-gradient(135deg,#1E4D6B,#1E6B8A);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 20px 60px rgba(30,107,138,0.35);">
+         <svg width="60" height="60" viewbox="0 0 60 60" fill="none"><path d="M15 35C15 22 22 14 30 14C38 14 45 22 45 35" stroke="white" stroke-width="3" stroke-linecap="round" /> <path d="M18 37h24" stroke="#5BBFD6" stroke-width="2.5" stroke-linecap="round" /> <path d="M20 42h20" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6" /> <circle cx="30" cy="48" r="3" fill="#5BBFD6" />
+         </svg><span class="text-white text-sm font-bold mt-2">Restioo Pod</span>
+        </div><!-- Orbit dots -->
+        <div style="position:absolute;top:22px;left:50%;transform:translateX(-50%);width:12px;height:12px;background:#5BBFD6;border-radius:50%;box-shadow:0 0 0 4px rgba(91,191,214,0.2);"></div>
+        <div style="position:absolute;right:18px;top:50%;transform:translateY(-50%);width:10px;height:10px;background:#1E6B8A;border-radius:50%;box-shadow:0 0 0 3px rgba(30,107,138,0.2);"></div>
+        <div style="position:absolute;bottom:22px;left:50%;transform:translateX(-50%);width:8px;height:8px;background:rgba(91,191,214,0.6);border-radius:50%;"></div>
+       </div>
+      </div><!-- Right: Content -->
+      <div class="flex-1">
+       <div class="section-divider mb-4"></div>
+       <p class="text-xs font-bold tracking-[3px] uppercase text-[#1E6B8A] mb-3">Về Restioo</p>
+       <h2 id="about-title" class="font-black mb-6" style="font-size:clamp(1.9rem,3.5vw,2.8rem);color:#1A2B3C;line-height:1.2;letter-spacing:-0.5px;">Không chỉ là chỗ ngủ —<br><span class="gradient-text">Trải nghiệm phục hồi</span><br>
+         năng lượng đích thực</h2>
+       <p id="about-desc-1" class="text-base leading-relaxed text-slate-600 mb-5">Restioo là mô hình <strong class="text-[#1E6B8A]">Sleep Box thế hệ mới</strong> — những không gian nghỉ ngơi mini được tích hợp công nghệ IoT hoàn toàn tự động. Không cần nhân viên, không cần chìa khóa, không cần đặt cọc.</p>
+       <p id="about-desc-2" class="text-base leading-relaxed text-slate-600 mb-8">Chúng tôi không bán "chỗ nằm". Chúng tôi bán <strong class="text-[#1E6B8A]">trải nghiệm phục hồi năng lượng</strong> — được cá nhân hóa qua nhiệt độ, ánh sáng, âm thanh và không khí trong mỗi phiên nghỉ.</p><!-- Diff Cards -->
+       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="rounded-2xl p-4 bg-slate-50 border border-slate-100">
+         <div class="w-9 h-9 rounded-xl mb-3 flex items-center justify-center" style="background:rgba(30,107,138,0.1);"><i data-lucide="x-circle" style="width:18px;height:18px;color:#EF4444;"></i>
+         </div>
+         <p class="text-xs font-bold text-slate-500 mb-1">Quán cafe ngủ</p>
+         <p class="text-xs text-slate-400">Ồn ào, không riêng tư, dịch vụ không ổn định</p>
+        </div>
+        <div class="rounded-2xl p-4 bg-slate-50 border border-slate-100">
+         <div class="w-9 h-9 rounded-xl mb-3 flex items-center justify-center" style="background:rgba(30,107,138,0.1);"><i data-lucide="x-circle" style="width:18px;height:18px;color:#EF4444;"></i>
+         </div>
+         <p class="text-xs font-bold text-slate-500 mb-1">Sleepbox truyền thống</p>
+         <p class="text-xs text-slate-400">Thủ công, thiếu công nghệ, trải nghiệm lạnh lùng</p>
+        </div>
+        <div class="rounded-2xl p-4 border-2 border-[#5BBFD6]" style="background:linear-gradient(135deg,rgba(91,191,214,0.08),rgba(30,107,138,0.05));">
+         <div class="w-9 h-9 rounded-xl mb-3 flex items-center justify-center" style="background:rgba(30,107,138,0.15);"><i data-lucide="check-circle" style="width:18px;height:18px;color:#1E6B8A;"></i>
+         </div>
+         <p class="text-xs font-bold text-[#1E6B8A] mb-1">Restioo</p>
+         <p class="text-xs text-slate-500">Tự động, riêng tư, sạch sẽ, thông minh</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- ====== TARGET CUSTOMERS ====== -->
+   <section class="py-24" style="background:#F0F4F8;">
+    <div class="max-w-7xl mx-auto px-6">
+     <div class="text-center mb-14 fade-in">
+      <div class="section-divider mx-auto mb-4"></div>
+      <p class="text-xs font-bold tracking-[3px] uppercase text-[#1E6B8A] mb-3">Đối Tượng Mục Tiêu</p>
+      <h2 class="font-black mb-4" style="font-size:clamp(1.9rem,3.5vw,2.8rem);color:#1A2B3C;letter-spacing:-0.5px;">Restioo dành cho<br><span class="gradient-text">ai?</span></h2>
+      <p class="text-base text-slate-500 max-w-xl mx-auto">Những người bận rộn, luôn di chuyển, cần một khoảng thời gian nghỉ ngơi chất lượng ngay giữa ngày làm việc</p>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-8"><!-- Card 1 -->
+      <div class="bg-white rounded-3xl p-8 card-hover fade-in">
+       <div class="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,rgba(30,107,138,0.12),rgba(91,191,214,0.08));">
+        💼
+       </div>
+       <h3 class="text-xl font-black text-[#1A2B3C] mb-3">Nhân Viên Văn Phòng</h3>
+       <p class="text-sm text-slate-500 leading-relaxed mb-5">Làm việc 8–10 giờ/ngày, thường gặp tình trạng mệt mỏi sau bữa trưa, giảm năng suất buổi chiều và áp lực deadline liên tục.</p>
+       <div class="space-y-2">
+        <div class="flex items-center gap-2 text-xs text-slate-600">
+         <div class="w-1.5 h-1.5 rounded-full bg-[#5BBFD6]"></div> Cần nghỉ 20–30 phút trong giờ trưa
+        </div>
+        <div class="flex items-center gap-2 text-xs text-slate-600">
+         <div class="w-1.5 h-1.5 rounded-full bg-[#5BBFD6]"></div> Ưu tiên riêng tư, không gian yên tĩnh
+        </div>
+        <div class="flex items-center gap-2 text-xs text-slate-600">
+         <div class="w-1.5 h-1.5 rounded-full bg-[#5BBFD6]"></div> Đặt chỗ nhanh qua điện thoại
+        </div>
+       </div>
+       <div class="mt-6 pt-5 border-t border-slate-100 flex items-center gap-3">
+        <div class="text-2xl font-black text-[#1E6B8A]">
+         3–5x
+        </div>
+        <div class="text-xs text-slate-400">
+         lần sử dụng/tuần trung bình
+        </div>
+       </div>
+      </div><!-- Card 2 -->
+      <div class="bg-white rounded-3xl p-8 card-hover fade-in" style="transition-delay:0.1s;">
+       <div class="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,rgba(30,107,138,0.12),rgba(91,191,214,0.08));">
+        🛵
+       </div>
+       <h3 class="text-xl font-black text-[#1A2B3C] mb-3">Người Lao Động Di Động</h3>
+       <p class="text-sm text-slate-500 leading-relaxed mb-5">Shipper, tài xế công nghệ, nhân viên giao hàng — làm việc ngoài trời nhiều giờ, không có không gian nghỉ ngơi cố định, cần nghỉ nhanh trong ca.</p>
+       <div class="space-y-2">
+        <div class="flex items-center gap-2 text-xs text-slate-600">
+         <div class="w-1.5 h-1.5 rounded-full bg-[#5BBFD6]"></div> Cần điểm dừng chân tiện lợi
+        </div>
+        <div class="flex items-center gap-2 text-xs text-slate-600">
+         <div class="w-1.5 h-1.5 rounded-full bg-[#5BBFD6]"></div> Giá phải chăng, thanh toán nhanh
+        </div>
+        <div class="flex items-center gap-2 text-xs text-slate-600">
+         <div class="w-1.5 h-1.5 rounded-full bg-[#5BBFD6]"></div> An toàn, sạch sẽ, không lo trộm cắp
+        </div>
+       </div>
+       <div class="mt-6 pt-5 border-t border-slate-100 flex items-center gap-3">
+        <div class="text-2xl font-black text-[#1E6B8A]">
+         1–2x
+        </div>
+        <div class="text-xs text-slate-400">
+         lần sử dụng/ngày tiêu biểu
+        </div>
+       </div>
+      </div><!-- Card 3 -->
+      <div class="bg-white rounded-3xl p-8 card-hover fade-in" style="transition-delay:0.2s;">
+       <div class="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,rgba(30,107,138,0.12),rgba(91,191,214,0.08));">
+        🎓
+       </div>
+       <h3 class="text-xl font-black text-[#1A2B3C] mb-3">Sinh Viên</h3>
+       <p class="text-sm text-slate-500 leading-relaxed mb-5">Lịch học dày đặc, thiếu không gian nghỉ ngơi riêng tư tại campus, áp lực ôn thi và deadline liên tục, cần phục hồi nhanh giữa các ca học.</p>
+       <div class="space-y-2">
+        <div class="flex items-center gap-2 text-xs text-slate-600">
+         <div class="w-1.5 h-1.5 rounded-full bg-[#5BBFD6]"></div> Giá ưu đãi cho sinh viên
+        </div>
+        <div class="flex items-center gap-2 text-xs text-slate-600">
+         <div class="w-1.5 h-1.5 rounded-full bg-[#5BBFD6]"></div> Gần thư viện, campus đại học
+        </div>
+        <div class="flex items-center gap-2 text-xs text-slate-600">
+         <div class="w-1.5 h-1.5 rounded-full bg-[#5BBFD6]"></div> Yên tĩnh, không bị quấy rầy
+        </div>
+       </div>
+       <div class="mt-6 pt-5 border-t border-slate-100 flex items-center gap-3">
+        <div class="text-2xl font-black text-[#1E6B8A]">
+         2–4x
+        </div>
+        <div class="text-xs text-slate-400">
+         lần sử dụng/tuần học kỳ
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- ====== USP / CORE VALUES ====== -->
+   <section id="features" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+     <div class="text-center mb-14 fade-in">
+      <div class="section-divider mx-auto mb-4"></div>
+      <p class="text-xs font-bold tracking-[3px] uppercase text-[#1E6B8A] mb-3">Giá Trị Cốt Lõi</p>
+      <h2 class="font-black mb-4" style="font-size:clamp(1.9rem,3.5vw,2.8rem);color:#1A2B3C;letter-spacing:-0.5px;">Điều gì làm Restioo<br><span class="gradient-text">khác biệt?</span></h2>
+     </div>
+     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"><!-- USP 1 -->
+      <div class="rounded-3xl p-7 fade-in" style="background:linear-gradient(135deg,#F0F4F8,#F8FAFC);border:1px solid rgba(91,191,214,0.15);">
+       <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style="background:linear-gradient(135deg,#1E6B8A,#2A8FA8);"><i data-lucide="lock" style="width:22px;height:22px;color:white;"></i>
+       </div>
+       <h3 class="text-lg font-black text-[#1A2B3C] mb-2">Riêng Tư Tuyệt Đối</h3>
+       <p class="text-sm text-slate-500 leading-relaxed">Mỗi pod là không gian cá nhân hoàn toàn. Khóa QR tự động, không ai vào được khi bạn đang sử dụng. Không có nhân viên, không có người lạ.</p>
+      </div><!-- USP 2 -->
+      <div class="rounded-3xl p-7 fade-in" style="background:linear-gradient(135deg,#F0F4F8,#F8FAFC);border:1px solid rgba(91,191,214,0.15);transition-delay:0.05s;">
+       <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style="background:linear-gradient(135deg,#1E6B8A,#2A8FA8);"><i data-lucide="cpu" style="width:22px;height:22px;color:white;"></i>
+       </div>
+       <h3 class="text-lg font-black text-[#1A2B3C] mb-2">Tự Động Hóa Toàn Bộ</h3>
+       <p class="text-sm text-slate-500 leading-relaxed">Từ đặt chỗ, check-in, điều chỉnh môi trường đến check-out và thanh toán — tất cả qua app, không cần tương tác với con người.</p>
+      </div><!-- USP 3 -->
+      <div class="rounded-3xl p-7 fade-in" style="background:linear-gradient(135deg,#F0F4F8,#F8FAFC);border:1px solid rgba(91,191,214,0.15);transition-delay:0.1s;">
+       <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style="background:linear-gradient(135deg,#1E6B8A,#2A8FA8);"><i data-lucide="sparkles" style="width:22px;height:22px;color:white;"></i>
+       </div>
+       <h3 class="text-lg font-black text-[#1A2B3C] mb-2">Sạch Sẽ &amp; An Toàn</h3>
+       <p class="text-sm text-slate-500 leading-relaxed">Hệ thống lọc khí và UV khử khuẩn tự động sau mỗi phiên. Chăn gối dùng một lần hoặc giặt hấp nhiệt. Cảm biến chất lượng không khí real-time.</p>
+      </div><!-- USP 4 -->
+      <div class="rounded-3xl p-7 fade-in" style="background:linear-gradient(135deg,#F0F4F8,#F8FAFC);border:1px solid rgba(91,191,214,0.15);transition-delay:0.15s;">
+       <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style="background:linear-gradient(135deg,#1E6B8A,#2A8FA8);"><i data-lucide="wifi" style="width:22px;height:22px;color:white;"></i>
+       </div>
+       <h3 class="text-lg font-black text-[#1A2B3C] mb-2">Công Nghệ IoT Thông Minh</h3>
+       <p class="text-sm text-slate-500 leading-relaxed">Kết nối Internet of Things điều khiển nhiệt độ, ánh sáng, âm thanh từ xa. Dashboard giám sát trạng thái pod theo thời gian thực.</p>
+      </div><!-- USP 5 -->
+      <div class="rounded-3xl p-7 fade-in" style="background:linear-gradient(135deg,#F0F4F8,#F8FAFC);border:1px solid rgba(91,191,214,0.15);transition-delay:0.2s;">
+       <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style="background:linear-gradient(135deg,#1E6B8A,#2A8FA8);"><i data-lucide="battery-charging" style="width:22px;height:22px;color:white;"></i>
+       </div>
+       <h3 class="text-lg font-black text-[#1A2B3C] mb-2">Phục Hồi Năng Lượng Nhanh</h3>
+       <p class="text-sm text-slate-500 leading-relaxed">Thiết kế dựa trên nghiên cứu khoa học về giấc ngủ ngắn (power nap). Môi trường tối ưu giúp bạn đạt trạng thái nghỉ sâu trong 15–30 phút.</p>
+      </div><!-- USP 6 -->
+      <div class="rounded-3xl p-7 fade-in" style="background:linear-gradient(135deg,#F0F4F8,#F8FAFC);border:1px solid rgba(91,191,214,0.15);transition-delay:0.25s;">
+       <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style="background:linear-gradient(135deg,#1E6B8A,#2A8FA8);"><i data-lucide="award" style="width:22px;height:22px;color:white;"></i>
+       </div>
+       <h3 class="text-lg font-black text-[#1A2B3C] mb-2">Trải Nghiệm Chuyên Nghiệp</h3>
+       <p class="text-sm text-slate-500 leading-relaxed">Thiết kế nội thất premium, vật liệu cao cấp. Giao diện app mượt mà, thanh toán tức thời. Chuẩn trải nghiệm startup công nghệ sức khỏe.</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- ====== HOW IT WORKS ====== -->
+   <section id="how-it-works" class="py-24" style="background:#F0F4F8;">
+    <div class="max-w-5xl mx-auto px-6">
+     <div class="text-center mb-14 fade-in">
+      <div class="section-divider mx-auto mb-4"></div>
+      <p class="text-xs font-bold tracking-[3px] uppercase text-[#1E6B8A] mb-3">Quy Trình Sử Dụng</p>
+      <h2 class="font-black mb-4" style="font-size:clamp(1.9rem,3.5vw,2.8rem);color:#1A2B3C;letter-spacing:-0.5px;">Chỉ cần <span class="gradient-text">60 giây</span><br>
+       để bắt đầu nghỉ ngơi</h2>
+     </div><!-- Steps -->
+     <div class="relative"><!-- Vertical line (desktop only) -->
+      <div class="hidden lg:block absolute left-1/2 top-0 bottom-0" style="width:2px;background:linear-gradient(to bottom,#5BBFD6,rgba(91,191,214,0.1));transform:translateX(-50%);"></div>
+      <div class="space-y-10"><!-- Step 1 -->
+       <div class="flex flex-col lg:flex-row items-center gap-8 fade-in">
+        <div class="flex-1 lg:text-right order-2 lg:order-1">
+         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 inline-block max-w-xs lg:ml-auto">
+          <h3 class="font-black text-[#1A2B3C] mb-1">Tìm Box Gần Nhất</h3>
+          <p class="text-sm text-slate-500">Mở app Restioo, bật GPS, hệ thống hiển thị các Sleep Box trống gần bạn theo thời gian thực.</p>
+         </div>
+        </div>
+        <div class="w-14 h-14 rounded-full flex items-center justify-center font-black text-white text-lg z-10 order-1 lg:order-2 flex-shrink-0" style="background:linear-gradient(135deg,#1E6B8A,#5BBFD6);box-shadow:0 0 0 6px rgba(91,191,214,0.15);">
+         1
+        </div>
+        <div class="flex-1 order-3 hidden lg:block"></div>
+       </div><!-- Step 2 -->
+       <div class="flex flex-col lg:flex-row items-center gap-8 fade-in">
+        <div class="flex-1 hidden lg:block order-1"></div>
+        <div class="w-14 h-14 rounded-full flex items-center justify-center font-black text-white text-lg z-10 flex-shrink-0" style="background:linear-gradient(135deg,#1E6B8A,#5BBFD6);box-shadow:0 0 0 6px rgba(91,191,214,0.15);">
+         2
+        </div>
+        <div class="flex-1 order-2 lg:order-3">
+         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 max-w-xs">
+          <h3 class="font-black text-[#1A2B3C] mb-1">Chọn Thời Gian Nghỉ</h3>
+          <p class="text-sm text-slate-500">Chọn 15, 30, 45 hay 60 phút. Cài đặt báo thức nhẹ nhàng, chọn nhạc nền và nhiệt độ theo ý muốn.</p>
+         </div>
+        </div>
+       </div><!-- Step 3 -->
+       <div class="flex flex-col lg:flex-row items-center gap-8 fade-in">
+        <div class="flex-1 lg:text-right order-2 lg:order-1">
+         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 inline-block max-w-xs lg:ml-auto">
+          <h3 class="font-black text-[#1A2B3C] mb-1">Đặt Chỗ &amp; Thanh Toán</h3>
+          <p class="text-sm text-slate-500">Xác nhận đặt chỗ, thanh toán qua ví điện tử, thẻ ngân hàng hoặc gói hội viên. Không cần tiền mặt.</p>
+         </div>
+        </div>
+        <div class="w-14 h-14 rounded-full flex items-center justify-center font-black text-white text-lg z-10 order-1 lg:order-2 flex-shrink-0" style="background:linear-gradient(135deg,#1E6B8A,#5BBFD6);box-shadow:0 0 0 6px rgba(91,191,214,0.15);">
+         3
+        </div>
+        <div class="flex-1 order-3 hidden lg:block"></div>
+       </div><!-- Step 4 -->
+       <div class="flex flex-col lg:flex-row items-center gap-8 fade-in">
+        <div class="flex-1 hidden lg:block order-1"></div>
+        <div class="w-14 h-14 rounded-full flex items-center justify-center font-black text-white text-lg z-10 flex-shrink-0" style="background:linear-gradient(135deg,#1E6B8A,#5BBFD6);box-shadow:0 0 0 6px rgba(91,191,214,0.15);">
+         4
+        </div>
+        <div class="flex-1 order-2 lg:order-3">
+         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 max-w-xs">
+          <h3 class="font-black text-[#1A2B3C] mb-1">Nhận Mã QR Check-in</h3>
+          <p class="text-sm text-slate-500">App gửi mã QR cá nhân hóa ngay tức thì. Mã chỉ dùng một lần và chỉ có giá trị trong khung giờ đặt.</p>
+         </div>
+        </div>
+       </div><!-- Step 5 -->
+       <div class="flex flex-col lg:flex-row items-center gap-8 fade-in">
+        <div class="flex-1 lg:text-right order-2 lg:order-1">
+         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 inline-block max-w-xs lg:ml-auto">
+          <h3 class="font-black text-[#1A2B3C] mb-1">Quét QR, Vào Box</h3>
+          <p class="text-sm text-slate-500">Đưa điện thoại vào máy quét tại cửa pod. Cửa mở tự động, môi trường đã được thiết lập sẵn theo lựa chọn của bạn.</p>
+         </div>
+        </div>
+        <div class="w-14 h-14 rounded-full flex items-center justify-center font-black text-white text-lg z-10 order-1 lg:order-2 flex-shrink-0" style="background:linear-gradient(135deg,#1E6B8A,#5BBFD6);box-shadow:0 0 0 6px rgba(91,191,214,0.15);">
+         5
+        </div>
+        <div class="flex-1 order-3 hidden lg:block"></div>
+       </div><!-- Step 6 -->
+       <div class="flex flex-col lg:flex-row items-center gap-8 fade-in">
+        <div class="flex-1 hidden lg:block order-1"></div>
+        <div class="w-14 h-14 rounded-full flex items-center justify-center font-black text-white text-lg z-10 flex-shrink-0" style="background:linear-gradient(135deg,#22C55E,#16A34A);box-shadow:0 0 0 6px rgba(34,197,94,0.15);">
+         ✓
+        </div>
+        <div class="flex-1 order-2 lg:order-3">
+         <div class="rounded-2xl p-6 max-w-xs border-2 border-[#22C55E]" style="background:linear-gradient(135deg,rgba(34,197,94,0.06),rgba(34,197,94,0.02));">
+          <h3 class="font-black text-[#1A2B3C] mb-1">Tỉnh Dậy &amp; Thoát Ra</h3>
+          <p class="text-sm text-slate-500">Nhạc nhẹ nhàng đánh thức sau đúng thời gian. Cửa mở, pod tự làm sạch. Bạn sẵn sàng chinh phục phần còn lại của ngày!</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- ====== TECH FEATURES ====== -->
+   <section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+     <div class="text-center mb-14 fade-in">
+      <div class="section-divider mx-auto mb-4"></div>
+      <p class="text-xs font-bold tracking-[3px] uppercase text-[#1E6B8A] mb-3">Giải Pháp Công Nghệ</p>
+      <h2 class="font-black mb-4" style="font-size:clamp(1.9rem,3.5vw,2.8rem);color:#1A2B3C;letter-spacing:-0.5px;">Mỗi pod là một<br><span class="gradient-text">hệ sinh thái công nghệ</span></h2>
+     </div>
+     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 fade-in">
+      <div class="tech-icon-wrap rounded-2xl p-6 text-center cursor-default">
+       <div class="text-3xl mb-3">
+        💡
+       </div>
+       <h4 class="font-bold text-sm text-[#1A2B3C] mb-1">Ánh Sáng Thông Minh</h4>
+       <p class="text-xs text-slate-400 leading-relaxed">Tự điều chỉnh cường độ và màu sắc theo giai đoạn ngủ</p>
+      </div>
+      <div class="tech-icon-wrap rounded-2xl p-6 text-center cursor-default">
+       <div class="text-3xl mb-3">
+        🌡️
+       </div>
+       <h4 class="font-bold text-sm text-[#1A2B3C] mb-1">Kiểm Soát Nhiệt Độ</h4>
+       <p class="text-xs text-slate-400 leading-relaxed">Duy trì 18–22°C, nhiệt độ tối ưu cho giấc ngủ ngắn</p>
+      </div>
+      <div class="tech-icon-wrap rounded-2xl p-6 text-center cursor-default">
+       <div class="text-3xl mb-3">
+        🎵
+       </div>
+       <h4 class="font-bold text-sm text-[#1A2B3C] mb-1">Âm Thanh Trị Liệu</h4>
+       <p class="text-xs text-slate-400 leading-relaxed">White noise, binaural beats, âm thanh thiên nhiên phục hồi</p>
+      </div>
+      <div class="tech-icon-wrap rounded-2xl p-6 text-center cursor-default">
+       <div class="text-3xl mb-3">
+        🌬️
+       </div>
+       <h4 class="font-bold text-sm text-[#1A2B3C] mb-1">Lọc Không Khí</h4>
+       <p class="text-xs text-slate-400 leading-relaxed">Bộ lọc HEPA + than hoạt tính, đổi gió liên tục</p>
+      </div>
+      <div class="tech-icon-wrap rounded-2xl p-6 text-center cursor-default">
+       <div class="text-3xl mb-3">
+        📲
+       </div>
+       <h4 class="font-bold text-sm text-[#1A2B3C] mb-1">QR Mở Cửa Tự Động</h4>
+       <p class="text-xs text-slate-400 leading-relaxed">Không chìa khóa, không thẻ từ — chỉ cần điện thoại</p>
+      </div>
+      <div class="tech-icon-wrap rounded-2xl p-6 text-center cursor-default">
+       <div class="text-3xl mb-3">
+        🔇
+       </div>
+       <h4 class="font-bold text-sm text-[#1A2B3C] mb-1">Cách Âm Cao Cấp</h4>
+       <p class="text-xs text-slate-400 leading-relaxed">Tiêu âm đa lớp, giảm tiếng ồn môi trường tới 40dB</p>
+      </div>
+      <div class="tech-icon-wrap rounded-2xl p-6 text-center cursor-default">
+       <div class="text-3xl mb-3">
+        📡
+       </div>
+       <h4 class="font-bold text-sm text-[#1A2B3C] mb-1">Kết Nối IoT</h4>
+       <p class="text-xs text-slate-400 leading-relaxed">Giám sát trạng thái pod 24/7, cảnh báo từ xa tức thì</p>
+      </div>
+      <div class="tech-icon-wrap rounded-2xl p-6 text-center cursor-default">
+       <div class="text-3xl mb-3">
+        🧹
+       </div>
+       <h4 class="font-bold text-sm text-[#1A2B3C] mb-1">Vệ Sinh Tự Động</h4>
+       <p class="text-xs text-slate-400 leading-relaxed">UV khử khuẩn và thông gió tự động sau mỗi phiên sử dụng</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- ====== COMPARISON TABLE ====== -->
+   <section class="py-24" style="background:#F0F4F8;">
+    <div class="max-w-6xl mx-auto px-6">
+     <div class="text-center mb-12 fade-in">
+      <div class="section-divider mx-auto mb-4"></div>
+      <p class="text-xs font-bold tracking-[3px] uppercase text-[#1E6B8A] mb-3">So Sánh</p>
+      <h2 class="font-black mb-4" style="font-size:clamp(1.9rem,3.5vw,2.8rem);color:#1A2B3C;letter-spacing:-0.5px;">Tại sao chọn <span class="gradient-text">Restioo</span>?</h2>
+     </div>
+     <div class="bg-white rounded-3xl overflow-hidden shadow-lg fade-in" style="border:1px solid rgba(91,191,214,0.15);">
+      <div class="overflow-x-auto">
+       <table class="w-full" style="border-collapse:collapse;min-width:640px;">
+        <thead>
+         <tr>
+          <th class="py-4 px-6 text-left text-sm text-white font-bold table-header-cell" style="width:22%;">Tiêu chí</th>
+          <th class="py-4 px-6 text-center text-sm font-black text-white table-restioo-col" style="background:linear-gradient(135deg,#1E4D6B,#1E6B8A)!important;"><span class="flex items-center justify-center gap-1.5"> <span style="width:8px;height:8px;background:#5BBFD6;border-radius:50%;display:inline-block;"></span> Restioo </span></th>
+          <th class="py-4 px-6 text-center text-sm text-white font-semibold table-header-cell">Quán Cafe Ngủ</th>
+          <th class="py-4 px-6 text-center text-sm text-white font-semibold table-header-cell">Sleepbox<br>
+           Truyền Thống</th>
+          <th class="py-4 px-6 text-center text-sm text-white font-semibold table-header-cell">Khách Sạn/Giờ</th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr class="compare-row border-t border-slate-100">
+          <td class="py-4 px-6 text-sm font-semibold text-slate-600">🔒 Mức độ riêng tư</td>
+          <td class="py-4 px-6 text-center restioo-td" style="background:rgba(91,191,214,0.06);"><span class="inline-flex items-center gap-1.5 text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full"><i data-lucide="check" style="width:12px;height:12px;"></i>Tuyệt đối</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-red-500 font-semibold">Thấp</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-amber-500 font-semibold">Trung bình</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-green-600 font-semibold">Cao</span></td>
+         </tr>
+         <tr class="compare-row border-t border-slate-100">
+          <td class="py-4 px-6 text-sm font-semibold text-slate-600">⚡ Công nghệ</td>
+          <td class="py-4 px-6 text-center restioo-td" style="background:rgba(91,191,214,0.06);"><span class="inline-flex items-center gap-1.5 text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full"><i data-lucide="check" style="width:12px;height:12px;"></i>IoT đầy đủ</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-red-500 font-semibold">Không có</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-amber-500 font-semibold">Cơ bản</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-slate-400 font-semibold">Ít</span></td>
+         </tr>
+         <tr class="compare-row border-t border-slate-100">
+          <td class="py-4 px-6 text-sm font-semibold text-slate-600">🚀 Tốc độ sử dụng</td>
+          <td class="py-4 px-6 text-center restioo-td" style="background:rgba(91,191,214,0.06);"><span class="inline-flex items-center gap-1.5 text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full"><i data-lucide="check" style="width:12px;height:12px;"></i>&lt; 60 giây</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-amber-500 font-semibold">5–10 phút</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-amber-500 font-semibold">3–5 phút</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-red-500 font-semibold">15–30 phút</span></td>
+         </tr>
+         <tr class="compare-row border-t border-slate-100">
+          <td class="py-4 px-6 text-sm font-semibold text-slate-600">💰 Mức giá/giờ</td>
+          <td class="py-4 px-6 text-center restioo-td" style="background:rgba(91,191,214,0.06);"><span class="inline-flex items-center gap-1.5 text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full"><i data-lucide="check" style="width:12px;height:12px;"></i>50–80k VNĐ</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-amber-500 font-semibold">30–60k (+đồ uống)</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-green-600 font-semibold">40–70k</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-red-500 font-semibold">100–300k</span></td>
+         </tr>
+         <tr class="compare-row border-t border-slate-100">
+          <td class="py-4 px-6 text-sm font-semibold text-slate-600">📍 Sự tiện lợi</td>
+          <td class="py-4 px-6 text-center restioo-td" style="background:rgba(91,191,214,0.06);"><span class="inline-flex items-center gap-1.5 text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full"><i data-lucide="check" style="width:12px;height:12px;"></i>Rất cao</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-amber-500 font-semibold">Trung bình</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-amber-500 font-semibold">Trung bình</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-red-500 font-semibold">Thấp</span></td>
+         </tr>
+         <tr class="compare-row border-t border-slate-100">
+          <td class="py-4 px-6 text-sm font-semibold text-slate-600">✨ Mức độ sạch sẽ</td>
+          <td class="py-4 px-6 text-center restioo-td" style="background:rgba(91,191,214,0.06);"><span class="inline-flex items-center gap-1.5 text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full"><i data-lucide="check" style="width:12px;height:12px;"></i>Cao (tự động)</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-red-500 font-semibold">Thấp</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-amber-500 font-semibold">Trung bình</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-amber-500 font-semibold">Cao (thủ công)</span></td>
+         </tr>
+         <tr class="compare-row border-t border-slate-100">
+          <td class="py-4 px-6 text-sm font-semibold text-slate-600">😴 Phù hợp nghỉ trưa</td>
+          <td class="py-4 px-6 text-center restioo-td" style="background:rgba(91,191,214,0.06);"><span class="inline-flex items-center gap-1.5 text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full"><i data-lucide="check" style="width:12px;height:12px;"></i>Tối ưu</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-amber-500 font-semibold">Có thể</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-green-600 font-semibold">Tốt</span></td>
+          <td class="py-4 px-6 text-center"><span class="text-xs text-red-500 font-semibold">Quá đắt/lâu</span></td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </div>
+   </section><!-- ====== PRICING ====== -->
+   <section id="pricing" class="py-24 bg-white">
+    <div class="max-w-6xl mx-auto px-6">
+     <div class="text-center mb-4 fade-in">
+      <div class="section-divider mx-auto mb-4"></div>
+      <p class="text-xs font-bold tracking-[3px] uppercase text-[#1E6B8A] mb-3">Bảng Giá Định Hướng</p>
+      <h2 class="font-black mb-3" style="font-size:clamp(1.9rem,3.5vw,2.8rem);color:#1A2B3C;letter-spacing:-0.5px;">Linh hoạt, minh bạch,<br><span class="gradient-text">phù hợp mọi nhu cầu</span></h2>
+      <p class="text-sm text-amber-600 bg-amber-50 inline-block px-4 py-2 rounded-full font-medium">⚠️ Đây là mức giá tham khảo định hướng, chưa phải giá chính thức</p>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10 fade-in"><!-- Giờ lẻ -->
+      <div class="rounded-3xl p-8 card-hover bg-slate-50 border border-slate-100">
+       <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(30,107,138,0.1);"><i data-lucide="clock" style="width:22px;height:22px;color:#1E6B8A;"></i>
+       </div>
+       <h3 class="text-lg font-black text-[#1A2B3C] mb-1">Theo Giờ Lẻ</h3>
+       <p class="text-sm text-slate-500 mb-5">Linh hoạt, dùng khi cần, không cam kết</p>
+       <div class="mb-6">
+        <div class="text-4xl font-black text-[#1E6B8A]">
+         50k<span class="text-slate-400 text-xl font-normal">/giờ</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Giờ thấp điểm (6–11h, 14–17h)</p>
+       </div>
+       <div class="mb-6">
+        <div class="text-4xl font-black text-[#1A2B3C]">
+         80k<span class="text-slate-400 text-xl font-normal">/giờ</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Giờ cao điểm (11h–14h, 17h–20h)</p>
+       </div>
+       <ul class="space-y-2 text-sm text-slate-600">
+        <li class="flex items-center gap-2"><i data-lucide="check-circle" style="width:16px;height:16px;color:#22C55E;"></i>Thanh toán tức thì qua app</li>
+        <li class="flex items-center gap-2"><i data-lucide="check-circle" style="width:16px;height:16px;color:#22C55E;"></i>Không cần đặt trước</li>
+        <li class="flex items-center gap-2"><i data-lucide="check-circle" style="width:16px;height:16px;color:#22C55E;"></i>Tính phí theo phút thực tế</li>
+       </ul>
+      </div><!-- Gói hội viên - Featured -->
+      <div class="pricing-featured rounded-3xl p-8 relative">
+       <div class="absolute -top-4 left-1/2 transform -translate-x-1/2"><span class="bg-[#5BBFD6] text-white text-xs font-black px-4 py-1.5 rounded-full tracking-wider">PHỔ BIẾN NHẤT</span>
+       </div>
+       <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(91,191,214,0.2);"><i data-lucide="star" style="width:22px;height:22px;color:#5BBFD6;"></i>
+       </div>
+       <h3 class="text-lg font-black text-white mb-1">Gói Hội Viên</h3>
+       <p class="text-sm mb-5" style="color:rgba(255,255,255,0.6);">Cho người dùng thường xuyên, tiết kiệm đến 35%</p>
+       <div class="mb-6">
+        <div class="text-4xl font-black text-[#5BBFD6]">
+         35k<span class="text-white text-xl font-normal opacity-70">/giờ</span>
+        </div>
+        <p class="text-xs mt-1" style="color:rgba(255,255,255,0.5);">Gói 10 giờ/tháng — 350k VNĐ</p>
+       </div>
+       <div class="mb-6">
+        <div class="text-4xl font-black text-white">
+         30k<span class="text-white text-xl font-normal opacity-70">/giờ</span>
+        </div>
+        <p class="text-xs mt-1" style="color:rgba(255,255,255,0.5);">Gói 20 giờ/tháng — 600k VNĐ</p>
+       </div>
+       <ul class="space-y-2 text-sm" style="color:rgba(255,255,255,0.8);">
+        <li class="flex items-center gap-2"><i data-lucide="check-circle" style="width:16px;height:16px;color:#5BBFD6;"></i>Ưu tiên đặt chỗ giờ cao điểm</li>
+        <li class="flex items-center gap-2"><i data-lucide="check-circle" style="width:16px;height:16px;color:#5BBFD6;"></i>Tích điểm đổi giờ miễn phí</li>
+        <li class="flex items-center gap-2"><i data-lucide="check-circle" style="width:16px;height:16px;color:#5BBFD6;"></i>Báo cáo sức khỏe giấc ngủ</li>
+        <li class="flex items-center gap-2"><i data-lucide="check-circle" style="width:16px;height:16px;color:#5BBFD6;"></i>Không hết hạn trong tháng</li>
+       </ul>
+      </div><!-- Gói Doanh Nghiệp -->
+      <div class="rounded-3xl p-8 card-hover bg-slate-50 border border-slate-100">
+       <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5" style="background:rgba(30,107,138,0.1);"><i data-lucide="building-2" style="width:22px;height:22px;color:#1E6B8A;"></i>
+       </div>
+       <h3 class="text-lg font-black text-[#1A2B3C] mb-1">Gói Doanh Nghiệp (B2B)</h3>
+       <p class="text-sm text-slate-500 mb-5">Cho tòa nhà, co-working, campus đại học</p>
+       <div class="mb-6">
+        <div class="text-4xl font-black text-[#1E6B8A]">
+         Liên hệ
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Tùy số lượng pods và vị trí</p>
+       </div>
+       <div class="mb-6 p-4 rounded-2xl" style="background:rgba(30,107,138,0.06);border:1px solid rgba(91,191,214,0.2);">
+        <p class="text-xs text-slate-500">Ước tính: từ <strong class="text-[#1E6B8A]">25k VNĐ/giờ/người</strong> khi đặt từ 50 giờ/tháng</p>
+       </div>
+       <ul class="space-y-2 text-sm text-slate-600">
+        <li class="flex items-center gap-2"><i data-lucide="check-circle" style="width:16px;height:16px;color:#22C55E;"></i>Dashboard quản lý cho HR</li>
+        <li class="flex items-center gap-2"><i data-lucide="check-circle" style="width:16px;height:16px;color:#22C55E;"></i>Hóa đơn VAT theo tháng</li>
+        <li class="flex items-center gap-2"><i data-lucide="check-circle" style="width:16px;height:16px;color:#22C55E;"></i>Branding tòa nhà</li>
+       </ul>
+      </div>
+     </div>
+    </div>
+   </section><!-- ====== LOCATIONS ====== -->
+   <section id="locations" class="py-24" style="background:#F0F4F8;">
+    <div class="max-w-7xl mx-auto px-6">
+     <div class="text-center mb-14 fade-in">
+      <div class="section-divider mx-auto mb-4"></div>
+      <p class="text-xs font-bold tracking-[3px] uppercase text-[#1E6B8A] mb-3">Địa Điểm Triển Khai</p>
+      <h2 class="font-black mb-4" style="font-size:clamp(1.9rem,3.5vw,2.8rem);color:#1A2B3C;letter-spacing:-0.5px;">Restioo ở<br><span class="gradient-text">khắp nơi bạn cần</span></h2>
+      <p class="text-base text-slate-500 max-w-xl mx-auto">Chiến lược micro-location — đặt pod ngay tại nơi người dùng đang có mặt</p>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 fade-in">
+      <div class="bg-white rounded-3xl p-7 card-hover text-center">
+       <div class="text-4xl mb-4">
+        🏢
+       </div>
+       <h3 class="font-black text-[#1A2B3C] mb-2">Tòa Nhà Văn Phòng</h3>
+       <p class="text-sm text-slate-500 mb-4 leading-relaxed">Hạng A/B tại các quận trung tâm. Đặt tại tầng hầm, tầng 1 hoặc tầng canteen.</p>
+       <div class="inline-block px-3 py-1 rounded-full text-xs font-bold" style="background:rgba(30,107,138,0.08);color:#1E6B8A;">
+        Ưu tiên triển khai
+       </div>
+      </div>
+      <div class="bg-white rounded-3xl p-7 card-hover text-center">
+       <div class="text-4xl mb-4">
+        💻
+       </div>
+       <h3 class="font-black text-[#1A2B3C] mb-2">Co-working Space</h3>
+       <p class="text-sm text-slate-500 mb-4 leading-relaxed">Topal, Toong, Work Saigon, Dreamplex... — nơi freelancer và startup tập trung đông nhất.</p>
+       <div class="inline-block px-3 py-1 rounded-full text-xs font-bold" style="background:rgba(30,107,138,0.08);color:#1E6B8A;">
+        Đối tác B2B
+       </div>
+      </div>
+      <div class="bg-white rounded-3xl p-7 card-hover text-center">
+       <div class="text-4xl mb-4">
+        📚
+       </div>
+       <h3 class="font-black text-[#1A2B3C] mb-2">Thư Viện &amp; Campus</h3>
+       <p class="text-sm text-slate-500 mb-4 leading-relaxed">Đại học RMIT, UEH, FPT, Bách Khoa... Không gian học tập tập trung đông sinh viên.</p>
+       <div class="inline-block px-3 py-1 rounded-full text-xs font-bold" style="background:rgba(30,107,138,0.08);color:#1E6B8A;">
+        Giá sinh viên
+       </div>
+      </div>
+      <div class="bg-white rounded-3xl p-7 card-hover text-center">
+       <div class="text-4xl mb-4">
+        🛍️
+       </div>
+       <h3 class="font-black text-[#1A2B3C] mb-2">TTTM &amp; Transit Hub</h3>
+       <p class="text-sm text-slate-500 mb-4 leading-relaxed">Aeon Mall, Vincom, bến xe, nhà ga — vị trí có lưu lượng người qua lại cao liên tục.</p>
+       <div class="inline-block px-3 py-1 rounded-full text-xs font-bold" style="background:rgba(30,107,138,0.08);color:#1E6B8A;">
+        Giai đoạn mở rộng
+       </div>
+      </div>
+     </div><!-- Map Mockup -->
+     <div class="mt-10 rounded-3xl overflow-hidden fade-in" style="background:linear-gradient(135deg,#1E4D6B,#1A3D54);padding:40px;border:1px solid rgba(91,191,214,0.2);">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+       <div class="text-white">
+        <h3 class="text-xl font-black mb-2">Triển khai đầu tiên tại Hà Nội - Trường PTIT</h3>
+        <p style="color:rgba(255,255,255,0.65);font-size:0.9rem;max-width:320px;line-height:1.7;">Giai đoạn 1 (2025–2026): 20 địa điểm pilot tại Trường Đại học Công nghệ Thông tin (PTIT). Sau đó mở rộng ra các trường đại học khác tại Hà Nội và các thành phố lớn khác.</p>
+        <div class="flex gap-4 mt-5">
+         <div class="text-center">
+          <div class="text-2xl font-black text-[#5BBFD6]">
+           20
+          </div>
+          <div class="text-xs" style="color:rgba(255,255,255,0.5);">
+           Điểm pilot
+          </div>
+         </div>
+         <div class="text-center">
+          <div class="text-2xl font-black text-[#5BBFD6]">
+           3
+          </div>
+          <div class="text-xs" style="color:rgba(255,255,255,0.5);">
+           Quận trọng điểm
+          </div>
+         </div>
+         <div class="text-center">
+          <div class="text-2xl font-black text-[#5BBFD6]">
+           2025
+          </div>
+          <div class="text-xs" style="color:rgba(255,255,255,0.5);">
+           Dự kiến ra mắt
+          </div>
+         </div>
+        </div>
+       </div><!-- Pseudo map -->
+       <div class="relative" style="width:220px;height:180px;flex-shrink:0;">
+        <div class="absolute inset-0 rounded-2xl" style="background:rgba(255,255,255,0.05);border:1px solid rgba(91,191,214,0.2);"></div><!-- Pin dots -->
+        <div style="position:absolute;top:35%;left:40%;width:12px;height:12px;background:#5BBFD6;border-radius:50%;box-shadow:0 0 0 4px rgba(91,191,214,0.25);"></div>
+        <div style="position:absolute;top:20%;left:55%;width:10px;height:10px;background:#5BBFD6;border-radius:50%;box-shadow:0 0 0 3px rgba(91,191,214,0.2);"></div>
+        <div style="position:absolute;top:55%;left:65%;width:10px;height:10px;background:#5BBFD6;border-radius:50%;box-shadow:0 0 0 3px rgba(91,191,214,0.2);"></div>
+        <div style="position:absolute;top:60%;left:30%;width:8px;height:8px;background:rgba(91,191,214,0.6);border-radius:50%;"></div>
+        <div style="position:absolute;top:75%;left:50%;width:8px;height:8px;background:rgba(91,191,214,0.6);border-radius:50%;"></div>
+        <div class="absolute bottom-3 left-3 right-3 text-center" style="color:rgba(255,255,255,0.4);font-size:0.65rem;">
+         Hà Nội — Bản đồ minh họa
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- ====== BRAND MESSAGING ====== -->
+   <section class="quote-bg py-24">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+     <div class="mb-8">
+      <div class="text-5xl font-black text-white leading-tight" style="font-family:'Playfair Display',serif;font-style:italic;">
+       "30 phút sạc nhanh,<br><span style="background:linear-gradient(135deg,#5BBFD6,#A8E6F0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">cả ngày năng lượng."</span>
+      </div>
+     </div>
+     <p class="text-base mb-10" style="color:rgba(255,255,255,0.6);max-width:560px;margin-left:auto;margin-right:auto;line-height:1.8;">Restioo không chỉ là nơi nghỉ trưa. Chúng tôi đang xây dựng hạ tầng sức khỏe đô thị — nơi mỗi người lao động đều có quyền tiếp cận giấc ngủ chất lượng.</p><!-- Content pillars -->
+     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div class="rounded-2xl p-6" style="background:rgba(255,255,255,0.06);border:1px solid rgba(91,191,214,0.2);">
+       <div class="text-2xl mb-3">
+        💪
+       </div>
+       <h4 class="font-black text-white mb-2">Hiệu Suất Làm Việc</h4>
+       <p class="text-sm" style="color:rgba(255,255,255,0.55);">Nghiên cứu NASA: ngủ 26 phút tăng 34% hiệu suất và 54% cảnh giác</p>
+      </div>
+      <div class="rounded-2xl p-6" style="background:rgba(255,255,255,0.06);border:1px solid rgba(91,191,214,0.2);">
+       <div class="text-2xl mb-3">
+        🧘
+       </div>
+       <h4 class="font-black text-white mb-2">Sức Khỏe Tinh Thần</h4>
+       <p class="text-sm" style="color:rgba(255,255,255,0.55);">Giảm stress, cải thiện tâm trạng và khả năng tập trung sau giấc ngủ ngắn</p>
+      </div>
+      <div class="rounded-2xl p-6" style="background:rgba(255,255,255,0.06);border:1px solid rgba(91,191,214,0.2);">
+       <div class="text-2xl mb-3">
+        🌱
+       </div>
+       <h4 class="font-black text-white mb-2">Lối Sống Bền Vững</h4>
+       <p class="text-sm" style="color:rgba(255,255,255,0.55);">Thay thế caffeine và nước tăng lực bằng nghỉ ngơi tự nhiên, lành mạnh hơn</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- ====== APP MOCKUP ====== -->
+   <section id="app" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+     <div class="flex flex-col lg:flex-row items-center gap-16"><!-- Content -->
+      <div class="flex-1">
+       <div class="section-divider mb-4"></div>
+       <p class="text-xs font-bold tracking-[3px] uppercase text-[#1E6B8A] mb-3">Hệ Sinh Thái Số</p>
+       <h2 class="font-black mb-6" style="font-size:clamp(1.9rem,3.5vw,2.8rem);color:#1A2B3C;letter-spacing:-0.5px;">Toàn bộ trải nghiệm<br><span class="gradient-text">trong lòng bàn tay</span></h2>
+       <p class="text-base text-slate-600 mb-8 leading-relaxed">Restioo App là trung tâm điều khiển toàn bộ trải nghiệm — từ tìm kiếm, đặt chỗ đến theo dõi sức khỏe giấc ngủ theo thời gian.</p>
+       <div class="space-y-4">
+        <div class="flex items-start gap-4 p-4 rounded-2xl" style="background:#F0F4F8;">
+         <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#1E6B8A,#2A8FA8);"><i data-lucide="map-pin" style="width:18px;height:18px;color:white;"></i>
+         </div>
+         <div>
+          <h4 class="font-bold text-[#1A2B3C] text-sm mb-0.5">Bản đồ pod thời gian thực</h4>
+          <p class="text-xs text-slate-500">Xem pod trống gần nhất, đặt trước tới 2 giờ</p>
+         </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 rounded-2xl" style="background:#F0F4F8;">
+         <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#1E6B8A,#2A8FA8);"><i data-lucide="credit-card" style="width:18px;height:18px;color:white;"></i>
+         </div>
+         <div>
+          <h4 class="font-bold text-[#1A2B3C] text-sm mb-0.5">Thanh toán không tiền mặt</h4>
+          <p class="text-xs text-slate-500">MoMo, ZaloPay, thẻ ngân hàng, gói hội viên</p>
+         </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 rounded-2xl" style="background:#F0F4F8;">
+         <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#1E6B8A,#2A8FA8);"><i data-lucide="activity" style="width:18px;height:18px;color:white;"></i>
+         </div>
+         <div>
+          <h4 class="font-bold text-[#1A2B3C] text-sm mb-0.5">Theo dõi sức khỏe giấc ngủ</h4>
+          <p class="text-xs text-slate-500">Lịch sử phiên nghỉ, điểm phục hồi, xu hướng theo tuần</p>
+         </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 rounded-2xl" style="background:#F0F4F8;">
+         <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#1E6B8A,#2A8FA8);"><i data-lucide="settings-2" style="width:18px;height:18px;color:white;"></i>
+         </div>
+         <div>
+          <h4 class="font-bold text-[#1A2B3C] text-sm mb-0.5">Cá nhân hóa môi trường</h4>
+          <p class="text-xs text-slate-500">Lưu cài đặt yêu thích về nhiệt độ, âm thanh, ánh sáng</p>
+         </div>
+        </div>
+       </div>
+       <div class="flex gap-4 mt-8"><button class="btn-primary px-6 py-3 rounded-2xl text-sm font-bold flex items-center gap-2"> <i data-lucide="bell" style="width:16px;height:16px;"></i> Thông báo khi ra mắt </button> <button class="btn-ghost px-6 py-3 rounded-2xl text-sm font-bold flex items-center gap-2"> <i data-lucide="mail" style="width:16px;height:16px;"></i> Liên hệ hợp tác </button>
+       </div>
+      </div><!-- Phone Mockup -->
+      <div class="flex-1 flex justify-center items-center gap-6"><!-- Main phone -->
+       <div class="phone-frame" style="width:200px;padding:16px 12px 20px;"><!-- Status bar -->
+        <div class="flex justify-between items-center mb-4 px-1"><span style="font-size:0.6rem;color:rgba(255,255,255,0.5);">9:41</span>
+         <div class="flex gap-1">
+          <div style="width:14px;height:6px;border-radius:2px;border:1px solid rgba(255,255,255,0.4);position:relative;">
+           <div style="position:absolute;top:1px;left:1px;right:3px;bottom:1px;background:#5BBFD6;border-radius:1px;"></div>
+          </div>
+         </div>
+        </div><!-- App Header -->
+        <div class="flex items-center justify-between mb-4">
+         <div>
+          <div style="font-size:0.55rem;color:rgba(255,255,255,0.4);">
+           Xin chào, Minh 👋
+          </div>
+          <div style="font-size:0.8rem;font-weight:800;color:white;">
+           Restioo
+          </div>
+         </div>
+         <div style="width:28px;height:28px;background:rgba(91,191,214,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+          <div style="width:12px;height:12px;background:#5BBFD6;border-radius:50%;"></div>
+         </div>
+        </div><!-- Status card -->
+        <div style="background:linear-gradient(135deg,#1E6B8A,#2A8FA8);border-radius:14px;padding:12px;margin-bottom:12px;">
+         <div style="font-size:0.55rem;color:rgba(255,255,255,0.65);margin-bottom:2px;">
+          Pod gần nhất
+         </div>
+         <div style="font-size:0.72rem;font-weight:800;color:white;margin-bottom:6px;">
+          Tòa nhà Bitexco
+         </div>
+         <div class="flex items-center gap-1">
+          <div style="width:6px;height:6px;background:#22C55E;border-radius:50%;"></div><span style="font-size:0.55rem;color:rgba(255,255,255,0.7);">3 pod trống • 0.2km</span>
+         </div>
+        </div><!-- Quick actions -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+         <div style="background:rgba(255,255,255,0.07);border-radius:10px;padding:8px;text-align:center;">
+          <div style="font-size:1rem;margin-bottom:2px;">
+           📍
+          </div>
+          <div style="font-size:0.55rem;color:rgba(255,255,255,0.6);">
+           Tìm box
+          </div>
+         </div>
+         <div style="background:rgba(255,255,255,0.07);border-radius:10px;padding:8px;text-align:center;">
+          <div style="font-size:1rem;margin-bottom:2px;">
+           🎫
+          </div>
+          <div style="font-size:0.55rem;color:rgba(255,255,255,0.6);">
+           Đặt chỗ
+          </div>
+         </div>
+         <div style="background:rgba(255,255,255,0.07);border-radius:10px;padding:8px;text-align:center;">
+          <div style="font-size:1rem;margin-bottom:2px;">
+           📊
+          </div>
+          <div style="font-size:0.55rem;color:rgba(255,255,255,0.6);">
+           Sức khỏe
+          </div>
+         </div>
+         <div style="background:rgba(91,191,214,0.15);border-radius:10px;padding:8px;text-align:center;border:1px solid rgba(91,191,214,0.3);">
+          <div style="font-size:1rem;margin-bottom:2px;">
+           👤
+          </div>
+          <div style="font-size:0.55rem;color:#5BBFD6;font-weight:700;">
+           Hội viên
+          </div>
+         </div>
+        </div><!-- Sessions -->
+        <div style="font-size:0.6rem;font-weight:700;color:rgba(255,255,255,0.4);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">
+         Lịch sử gần đây
+        </div>
+        <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:8px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
+         <div>
+          <div style="font-size:0.6rem;color:white;font-weight:600;">
+           Hôm qua, 12:30
+          </div>
+          <div style="font-size:0.55rem;color:rgba(255,255,255,0.4);">
+           30 phút • Bitexco
+          </div>
+         </div>
+         <div style="font-size:0.6rem;color:#5BBFD6;font-weight:700;">
+          40k
+         </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:8px;display:flex;justify-content:space-between;align-items:center;">
+         <div>
+          <div style="font-size:0.6rem;color:white;font-weight:600;">
+           Thứ 2, 13:15
+          </div>
+          <div style="font-size:0.55rem;color:rgba(255,255,255,0.4);">
+           45 phút • FPT Tower
+          </div>
+         </div>
+         <div style="font-size:0.6rem;color:#5BBFD6;font-weight:700;">
+          55k
+         </div>
+        </div>
+       </div><!-- Secondary phone (rotated, partial) -->
+       <div class="hidden sm:block phone-frame" style="width:170px;padding:14px 10px 16px;transform:rotate(6deg) translateY(20px);opacity:0.65;"><!-- Booking screen -->
+        <div style="font-size:0.65rem;font-weight:800;color:white;margin-bottom:10px;">
+         Đặt chỗ
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(91,191,214,0.2),rgba(30,107,138,0.15));border-radius:12px;padding:10px;margin-bottom:8px;">
+         <div style="font-size:0.55rem;color:rgba(255,255,255,0.5);margin-bottom:4px;">
+          Pod #A2 · Tầng 1
+         </div>
+         <div style="font-size:0.7rem;font-weight:800;color:white;">
+          Bitexco Financial
+         </div>
+         <div style="font-size:0.55rem;color:#5BBFD6;margin-top:2px;">
+          ● Đang trống
+         </div>
+        </div><!-- Time selector mock -->
+        <div style="display:flex;gap:4px;margin-bottom:8px;">
+         <div style="flex:1;padding:5px;background:linear-gradient(135deg,#1E6B8A,#2A8FA8);border-radius:8px;text-align:center;font-size:0.55rem;font-weight:700;color:white;">
+          15'
+         </div>
+         <div style="flex:1;padding:5px;background:rgba(255,255,255,0.08);border-radius:8px;text-align:center;font-size:0.55rem;color:rgba(255,255,255,0.5);">
+          30'
+         </div>
+         <div style="flex:1;padding:5px;background:rgba(255,255,255,0.08);border-radius:8px;text-align:center;font-size:0.55rem;color:rgba(255,255,255,0.5);">
+          45'
+         </div>
+         <div style="flex:1;padding:5px;background:rgba(255,255,255,0.08);border-radius:8px;text-align:center;font-size:0.55rem;color:rgba(255,255,255,0.5);">
+          60'
+         </div>
+        </div><!-- QR mock -->
+        <div style="background:white;border-radius:10px;padding:10px;text-align:center;">
+         <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin:0 auto;width:60px;">
+          <div style="height:8px;background:#1A2B3C;border-radius:1px;grid-column:span 2;"></div>
+          <div style="height:8px;"></div>
+          <div style="height:8px;background:#1A2B3C;border-radius:1px;grid-column:span 2;"></div>
+          <div style="height:8px;background:#1A2B3C;border-radius:1px;grid-column:span 2;"></div>
+          <div style="height:8px;background:#1A2B3C;border-radius:1px;"></div>
+          <div style="height:8px;"></div>
+          <div style="height:8px;background:#1A2B3C;border-radius:1px;grid-column:span 2;"></div>
+          <div style="height:8px;background:#1A2B3C;border-radius:1px;"></div>
+          <div style="height:8px;"></div>
+          <div style="height:8px;background:#1A2B3C;border-radius:1px;"></div>
+          <div style="height:8px;background:#1A2B3C;border-radius:1px;grid-column:span 2;"></div>
+         </div>
+         <div style="font-size:0.5rem;color:#1E6B8A;font-weight:700;margin-top:4px;">
+          QR Check-in
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- ====== MARKETING & B2B ====== -->
+   <section style="background:#F0F4F8;" class="py-20">
+    <div class="max-w-7xl mx-auto px-6">
+     <div class="text-center mb-12 fade-in">
+      <div class="section-divider mx-auto mb-4"></div>
+      <p class="text-xs font-bold tracking-[3px] uppercase text-[#1E6B8A] mb-3">Truyền Thông &amp; Đối Tác</p>
+      <h2 class="font-black mb-4" style="font-size:clamp(1.8rem,3vw,2.5rem);color:#1A2B3C;letter-spacing:-0.5px;">Hợp tác cùng <span class="gradient-text">Restioo</span></h2>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 fade-in"><!-- B2B -->
+      <div class="bg-white rounded-3xl p-8 card-hover" style="border:1px solid rgba(91,191,214,0.15);">
+       <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#1E6B8A,#2A8FA8);"><i data-lucide="briefcase" style="width:18px;height:18px;color:white;"></i>
+        </div>
+        <h3 class="font-black text-[#1A2B3C]">Đối Tác B2B</h3>
+       </div>
+       <p class="text-sm text-slate-500 mb-5 leading-relaxed">Restioo tìm kiếm đối tác chiến lược là chủ tòa nhà, ban quản lý co-working space, trường đại học và doanh nghiệp muốn nâng cao phúc lợi nhân viên.</p>
+       <ul class="space-y-2 text-sm text-slate-600 mb-6">
+        <li class="flex items-center gap-2"><i data-lucide="trending-up" style="width:14px;height:14px;color:#1E6B8A;"></i>Tăng giá trị dịch vụ tòa nhà</li>
+        <li class="flex items-center gap-2"><i data-lucide="users" style="width:14px;height:14px;color:#1E6B8A;"></i>Phúc lợi sức khỏe cho nhân viên</li>
+        <li class="flex items-center gap-2"><i data-lucide="dollar-sign" style="width:14px;height:14px;color:#1E6B8A;"></i>Mô hình chia sẻ doanh thu</li>
+       </ul><button class="btn-primary w-full py-3 rounded-2xl text-sm font-bold">Đăng ký hợp tác B2B</button>
+      </div><!-- Content & Community -->
+      <div class="bg-white rounded-3xl p-8 card-hover" style="border:1px solid rgba(91,191,214,0.15);">
+       <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#1E6B8A,#2A8FA8);"><i data-lucide="share-2" style="width:18px;height:18px;color:white;"></i>
+        </div>
+        <h3 class="font-black text-[#1A2B3C]">Cộng Đồng &amp; Truyền Thông</h3>
+       </div>
+       <p class="text-sm text-slate-500 mb-5 leading-relaxed">Theo dõi Restioo trên các kênh để cập nhật tin tức ra mắt, tips về giấc ngủ, sức khỏe tại nơi làm việc và ưu đãi sớm cho Early Adopters.</p>
+       <div class="grid grid-cols-2 gap-3 mb-6">
+        <div class="rounded-xl p-3 flex items-center gap-2" style="background:#F0F4F8;"><span class="text-lg">💼</span>
+         <div>
+          <div class="text-xs font-bold text-slate-700">
+           LinkedIn
+          </div>
+          <div class="text-xs text-slate-400">
+           B2B &amp; tuyển dụng
+          </div>
+         </div>
+        </div>
+        <div class="rounded-xl p-3 flex items-center gap-2" style="background:#F0F4F8;"><span class="text-lg">📱</span>
+         <div>
+          <div class="text-xs font-bold text-slate-700">
+           TikTok &amp; IG
+          </div>
+          <div class="text-xs text-slate-400">
+           Nội dung wellness
+          </div>
+         </div>
+        </div>
+        <div class="rounded-xl p-3 flex items-center gap-2" style="background:#F0F4F8;"><span class="text-lg">📧</span>
+         <div>
+          <div class="text-xs font-bold text-slate-700">
+           Newsletter
+          </div>
+          <div class="text-xs text-slate-400">
+           Ưu đãi sớm
+          </div>
+         </div>
+        </div>
+        <div class="rounded-xl p-3 flex items-center gap-2" style="background:#F0F4F8;"><span class="text-lg">💬</span>
+         <div>
+          <div class="text-xs font-bold text-slate-700">
+           Zalo OA
+          </div>
+          <div class="text-xs text-slate-400">
+           Hỗ trợ khách hàng
+          </div>
+         </div>
+        </div>
+       </div><button class="btn-ghost w-full py-3 rounded-2xl text-sm font-bold">Đăng ký nhận thông tin sớm</button>
+      </div>
+     </div>
+    </div>
+   </section><!-- ====== FINAL CTA ====== -->
+   <section class="py-24" style="background:linear-gradient(135deg,#0D2B3E 0%,#1E4D6B 50%,#1E6B8A 100%);">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+     <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full" style="background:rgba(91,191,214,0.15);border:1px solid rgba(91,191,214,0.3);">
+      <div class="pulse-dot"></div><span class="text-xs font-bold tracking-wider text-[#5BBFD6] uppercase">Sắp ra mắt tại Hà Nội</span>
+     </div>
+     <h2 id="cta-title" class="font-black text-white mb-5" style="font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-1px;line-height:1.2;">Sẵn sàng nghỉ ngơi<br>
+      thông minh hơn?</h2>
+     <p class="text-base mb-10" style="color:rgba(255,255,255,0.65);max-width:500px;margin-left:auto;margin-right:auto;">Đăng ký nhận thông báo ra mắt và nhận <strong style="color:#5BBFD6;">3 giờ sử dụng miễn phí</strong> cho 500 người dùng đầu tiên.</p><!-- Email capture (static demo) -->
+     <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-8"><input type="email" placeholder="Email của bạn" aria-label="Email đăng ký" class="flex-1 px-5 py-3.5 rounded-full text-sm outline-none border-none" style="background:rgba(255,255,255,0.1);color:white;border:1.5px solid rgba(91,191,214,0.35);" oninput="this.style.borderColor='rgba(91,191,214,0.6)'"> <button onclick="handleEmailSignup(this)" class="btn-primary px-7 py-3.5 rounded-full text-sm font-bold flex-shrink-0"> Đăng ký ngay </button>
+     </div>
+     <p style="font-size:0.75rem;color:rgba(255,255,255,0.35);">Không spam. Chỉ thông báo khi Restioo ra mắt chính thức.</p>
+     <div id="signup-success" class="hidden mt-4 px-5 py-3 rounded-full text-sm font-semibold" style="background:rgba(34,197,94,0.15);color:#4ADE80;border:1px solid rgba(34,197,94,0.3);display:none !important;">
+      🎉 Đăng ký thành công! Bạn sẽ nhận thông báo sớm nhất.
+     </div>
+    </div>
+   </section><!-- ====== FOOTER ====== -->
+   <footer style="background:#0D1E2C;">
+    <div class="max-w-7xl mx-auto px-6 py-12">
+     <div class="flex flex-col md:flex-row items-start justify-between gap-10 mb-10"><!-- Brand -->
+      <div class="max-w-xs">
+       <div class="flex items-center gap-2 mb-4">
+        <div style="width:36px;height:36px;background:linear-gradient(135deg,#1E6B8A,#5BBFD6);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+         <svg width="20" height="20" viewbox="0 0 24 24" fill="none">
+          <path d="M3 12C3 7.03 7.03 3 12 3s9 4.03 9 9-4.03 9-9 9" stroke="white" stroke-width="2" stroke-linecap="round" /><path d="M7 12s1-3 5-3 5 3 5 3" stroke="white" stroke-width="2" stroke-linecap="round" /><path d="M9 15h6" stroke="white" stroke-width="2" stroke-linecap="round" />
+         </svg>
+        </div><span id="footer-brand" style="font-weight:800;font-size:1.3rem;color:white;letter-spacing:-0.5px;">Restioo</span>
+       </div>
+       <p id="footer-text" class="text-sm leading-relaxed" style="color:rgba(255,255,255,0.4);">Dịch vụ ngủ trưa thông minh – Riêng tư – Tự động hóa. Đang phát triển, dự kiến ra mắt 2025.</p>
+      </div><!-- Links -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-8">
+       <div>
+        <h5 class="text-xs font-bold uppercase tracking-wider mb-4" style="color:rgba(255,255,255,0.35);">Sản phẩm</h5>
+        <ul class="space-y-2 text-sm" style="color:rgba(255,255,255,0.5);">
+         <li><a href="#features" class="hover:text-[#5BBFD6] transition-colors">Tính năng</a></li>
+         <li><a href="#how-it-works" class="hover:text-[#5BBFD6] transition-colors">Cách hoạt động</a></li>
+         <li><a href="#pricing" class="hover:text-[#5BBFD6] transition-colors">Bảng giá</a></li>
+         <li><a href="#app" class="hover:text-[#5BBFD6] transition-colors">Ứng dụng</a></li>
+        </ul>
+       </div>
+       <div>
+        <h5 class="text-xs font-bold uppercase tracking-wider mb-4" style="color:rgba(255,255,255,0.35);">Công ty</h5>
+        <ul class="space-y-2 text-sm" style="color:rgba(255,255,255,0.5);">
+         <li><a href="#about" class="hover:text-[#5BBFD6] transition-colors">Về chúng tôi</a></li>
+         <li><a href="#locations" class="hover:text-[#5BBFD6] transition-colors">Địa điểm</a></li>
+         <li><span class="cursor-default">Tuyển dụng</span></li>
+         <li><span class="cursor-default">Blog</span></li>
+        </ul>
+       </div>
+       <div>
+        <h5 class="text-xs font-bold uppercase tracking-wider mb-4" style="color:rgba(255,255,255,0.35);">Liên hệ</h5>
+        <ul class="space-y-2 text-sm" style="color:rgba(255,255,255,0.5);">
+         <li>contact@restioo.vn</li>
+         <li>B2B: partner@restioo.vn</li>
+         <li>Hỗ trợ: 24/7 qua app</li>
+        </ul>
+       </div>
+      </div>
+     </div>
+     <div class="border-t flex flex-col sm:flex-row items-center justify-between gap-4 pt-8" style="border-color:rgba(255,255,255,0.08);">
+      <p style="font-size:0.75rem;color:rgba(255,255,255,0.25);">© 2025 Restioo. Thương hiệu đang trong quá trình phát triển. Website tĩnh giới thiệu định hướng.</p>
+      <div class="flex gap-4 text-xs" style="color:rgba(255,255,255,0.25);"><span class="cursor-default hover:text-[#5BBFD6] transition-colors">Chính sách bảo mật</span> <span class="cursor-default hover:text-[#5BBFD6] transition-colors">Điều khoản sử dụng</span>
+      </div>
+     </div>
+    </div>
+   </footer>
+  </div><!-- end app-wrapper -->
+  <script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // Mobile menu toggle
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  mobileToggle.addEventListener('click', function() {
+    mobileMenu.classList.toggle('open');
+  });
+  function closeMobileMenu() {
+    mobileMenu.classList.remove('open');
+  }
+
+  // Email signup handler
+  function handleEmailSignup(btn) {
+    const input = btn.previousElementSibling;
+    if (!input.value || !input.value.includes('@')) {
+      input.style.borderColor = 'rgba(239,68,68,0.7)';
+      return;
+    }
+    btn.textContent = '✓ Đã đăng ký!';
+    btn.style.background = 'linear-gradient(135deg,#16A34A,#22C55E)';
+    btn.disabled = true;
+    input.disabled = true;
+    const success = document.getElementById('signup-success');
+    success.style.removeProperty('display');
+    success.classList.remove('hidden');
+  }
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        const wrapper = document.querySelector('.app-wrapper');
+        const targetOffset = target.getBoundingClientRect().top + wrapper.scrollTop - 80;
+        wrapper.scrollTo({ top: targetOffset, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Scroll-triggered fade animations
+  const fadeEls = document.querySelectorAll('.fade-in');
+  const wrapper = document.querySelector('.app-wrapper');
+
+  function checkFade() {
+    const wrapperRect = wrapper.getBoundingClientRect();
+    fadeEls.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < wrapperRect.bottom - 80) {
+        el.classList.add('visible');
+      }
+    });
+  }
+
+  wrapper.addEventListener('scroll', checkFade, { passive: true });
+  // Initial check
+  setTimeout(checkFade, 100);
+
+  // Initialize SDK
+  window.elementSdk && window.elementSdk.init({
+    defaultConfig: {
+      hero_headline: 'Nghỉ Ngơi Thông Minh. Sạc Năng Lượng Trong 30 Phút.',
+      hero_subheadline: 'Restioo mang đến không gian nghỉ trưa riêng tư, sạch sẽ, tự động hóa hoàn toàn — ngay tại tòa nhà văn phòng, campus, trung tâm thương mại của bạn.',
+      cta_primary: 'Khám phá dịch vụ',
+      tagline: '30 phút sạc nhanh, cả ngày năng lượng.',
+      about_title: 'Không chỉ là chỗ ngủ — Trải nghiệm phục hồi năng lượng đích thực',
+      footer_text: 'Dịch vụ ngủ trưa thông minh – Riêng tư – Tự động hóa. Đang phát triển, dự kiến ra mắt 2025.',
+      background_color: '#F0F4F8',
+      surface_color: '#FFFFFF',
+      text_color: '#1A2B3C',
+      primary_color: '#1E6B8A',
+      accent_color: '#5BBFD6',
+      font_family: 'Be Vietnam Pro',
+      font_size: 16
+    },
+    onConfigChange: async function(config) {
+      const dc = window.elementSdk.config;
+
+      // Text updates
+      const heroH = document.getElementById('hero-headline');
+      if (heroH) heroH.textContent = config.hero_headline || dc.hero_headline;
+
+      const heroS = document.getElementById('hero-subheadline');
+      if (heroS) heroS.textContent = config.hero_subheadline || dc.hero_subheadline;
+
+      const cta1 = document.getElementById('hero-cta-1');
+      if (cta1) {
+        const span = cta1.querySelector('span');
+        if (span) span.textContent = config.cta_primary || dc.cta_primary;
+      }
+
+      const navCta = document.getElementById('nav-cta');
+      if (navCta) navCta.textContent = 'Tải App Sớm';
+
+      const aTitle = document.getElementById('about-title');
+      if (aTitle) aTitle.textContent = config.about_title || dc.about_title;
+
+      const footerT = document.getElementById('footer-text');
+      if (footerT) footerT.textContent = config.footer_text || dc.footer_text;
+
+      // Colors
+      const bg = config.background_color || dc.background_color;
+      const surface = config.surface_color || dc.surface_color;
+      const text = config.text_color || dc.text_color;
+      const primary = config.primary_color || dc.primary_color;
+      const accent = config.accent_color || dc.accent_color;
+
+      document.documentElement.style.setProperty('--bg', bg);
+      document.documentElement.style.setProperty('--surface', surface);
+      document.documentElement.style.setProperty('--text', text);
+      document.documentElement.style.setProperty('--primary', primary);
+      document.documentElement.style.setProperty('--accent', accent);
+      document.body.style.background = bg;
+      document.body.style.color = text;
+
+      // Font
+      const font = config.font_family || dc.font_family;
+      const baseSize = config.font_size || dc.font_size;
+      document.body.style.fontFamily = `'${font}', 'Be Vietnam Pro', sans-serif`;
+
+      // Font sizes
+      document.querySelectorAll('p, li, td, th').forEach(el => {
+        el.style.fontSize = `${baseSize * 0.875}px`;
+      });
+    },
+    mapToCapabilities: function(config) {
+      const dc = window.elementSdk.config;
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || dc.background_color,
+            set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+          },
+          {
+            get: () => config.surface_color || dc.surface_color,
+            set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }
+          },
+          {
+            get: () => config.text_color || dc.text_color,
+            set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+          },
+          {
+            get: () => config.primary_color || dc.primary_color,
+            set: (v) => { config.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); }
+          },
+          {
+            get: () => config.accent_color || dc.accent_color,
+            set: (v) => { config.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || dc.font_family,
+          set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+        },
+        fontSizeable: {
+          get: () => config.font_size || dc.font_size,
+          set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+        }
+      };
+    },
+    mapToEditPanelValues: function(config) {
+      const dc = window.elementSdk.config;
+      return new Map([
+        ['hero_headline', config.hero_headline || dc.hero_headline],
+        ['hero_subheadline', config.hero_subheadline || dc.hero_subheadline],
+        ['cta_primary', config.cta_primary || dc.cta_primary],
+        ['tagline', config.tagline || dc.tagline],
+        ['about_title', config.about_title || dc.about_title],
+        ['footer_text', config.footer_text || dc.footer_text]
+      ]);
+    }
+  });
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e598c74c3588496',t:'MTc3NTA2NzAwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
