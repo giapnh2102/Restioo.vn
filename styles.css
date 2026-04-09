@@ -25,9 +25,9 @@ html, body {
 
 /* NAV */
 .nav-glass {
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(91,191,214,0.15);
+  background: #F8F8F8;
+  border-bottom: 1px solid rgba(91,191,214,0.18);
+  box-shadow: 0 2px 16px rgba(30,107,138,0.07);
 }
 
 /* HERO */
