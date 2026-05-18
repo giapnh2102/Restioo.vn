@@ -312,11 +312,11 @@ function addButtonHandlers() {
       } else if (text.includes('Đặt chỗ')) {
         showModal('Đặt chỗ sử dụng Pod', 'Mở ứng dụng Restioo để đặt chỗ ngay. Hiện tại, tính năng đặt chỗ trực tuyến đang trong giai đoạn beta.', 'showToast("Đã chuyển hướng tới app!", "info")');
       } else if (text.includes('Liên lạc') || text.includes('Liên hệ')) {
-        showToast('Email được sao chép: contact@restioo.vn', 'success');
-        navigator.clipboard.writeText('contact@restioo.vn');
+        showToast('Email được sao chép: info@restioo.vn', 'success');
+        navigator.clipboard.writeText('info@restioo.vn');
       } else if (text.includes('B2B')) {
-        showModal('Hợp tác B2B', 'Email hợp tác: partner@restioo.vn\n\nChúng tôi sẽ liên hệ bạn sớm nhất!', 'showToast("Email hợp tác được sao chép", "success")');
-        navigator.clipboard.writeText('partner@restioo.vn');
+        showModal('Hợp tác B2B', 'Email hợp tác: info@restioo.vn\n\nChúng tôi sẽ liên hệ bạn sớm nhất!', 'showToast("Email hợp tác được sao chép", "success")');
+        navigator.clipboard.writeText('info@restioo.vn');
       } else if (text.includes('Liên hệ') || text.includes('Đăng ký')) {
         showToast('Cảm ơn bạn quan tâm! Chúng tôi sẽ liên hệ sớm.', 'success');
       }
