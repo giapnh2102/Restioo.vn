@@ -203,33 +203,384 @@ function showModal(title, message, onConfirm = null) {
     <div class="modal-header">✓ ${title}</div>
     <div class="modal-message">${message}</div>
     <div class="modal-actions">
-      <button class="modal-close-btn" onclick="this.closest('.modal-overlay').remove()">Đóng</button>
-      ${onConfirm ? '<button class="modal-confirm-btn" onclick="this.closest(\'div\').dataset.confirm && eval(this.closest(\'div\').dataset.confirm); this.closest(\'.modal-overlay\').remove()">Xác nhận</button>' : ''}
+      <button class="modal-close-btn" type="button">Đóng</button>
+      ${onConfirm ? '<button class="modal-confirm-btn" type="button">Xác nhận</button>' : ''}
     </div>
   `;
   
-  if (onConfirm) {
-    dialog.dataset.confirm = onConfirm;
-  }
-  
   overlay.appendChild(dialog);
-  overlay.onclick = (e) => e.target === overlay && overlay.remove();
+  const closeModal = () => {
+    overlay.remove();
+    document.body.style.overflow = 'auto';
+  };
+  overlay.onclick = (e) => e.target === overlay && closeModal();
+  dialog.querySelector('.modal-close-btn').addEventListener('click', closeModal);
+  const confirmButton = dialog.querySelector('.modal-confirm-btn');
+  if (confirmButton) {
+    confirmButton.addEventListener('click', () => {
+      if (typeof onConfirm === 'function') onConfirm();
+      closeModal();
+    });
+  }
   document.body.appendChild(overlay);
   document.body.style.overflow = 'hidden';
   
   // Close on Escape key
   const closeOnEscape = (e) => {
     if (e.key === 'Escape') {
-      overlay.remove();
-      document.body.style.overflow = 'auto';
+      closeModal();
       document.removeEventListener('keydown', closeOnEscape);
     }
   };
   document.addEventListener('keydown', closeOnEscape);
   
-  setTimeout(() => {
+}
+
+const mockupSuccessAuditText = 'Thong tin se duoc gui ve phia Restioo';
+
+function normalizeActionText(text = '') {
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase()
+    .trim();
+}
+
+function escapeHtml(value = '') {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[char]));
+}
+
+function createMockupOverlay(content, options = {}) {
+  const overlay = document.createElement('div');
+  overlay.className = `mockup-overlay ${options.className || ''}`.trim();
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', options.label || 'Restioo mockup');
+
+  overlay.innerHTML = `
+    <div class="mockup-dialog ${options.dialogClass || ''}" role="document">
+      <button class="mockup-close" type="button" aria-label="Đóng">
+        <i data-lucide="x"></i>
+      </button>
+      ${content}
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  document.body.style.overflow = 'hidden';
+
+  const closeOverlay = () => {
+    overlay.remove();
     document.body.style.overflow = 'auto';
-  }, 5000);
+    document.removeEventListener('keydown', closeOnEscape);
+  };
+
+  const closeOnEscape = (event) => {
+    if (event.key === 'Escape') closeOverlay();
+  };
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) closeOverlay();
+  });
+  overlay.querySelector('.mockup-close').addEventListener('click', closeOverlay);
+  document.addEventListener('keydown', closeOnEscape);
+
+  overlay.querySelectorAll('form[data-mockup-form]').forEach((form) => {
+    form.addEventListener('submit', handleMockupSubmit);
+  });
+
+  if (window.lucide) window.lucide.createIcons();
+  requestAnimationFrame(() => overlay.classList.add('mockup-ready'));
+
+  return { overlay, close: closeOverlay };
+}
+
+function handleMockupSubmit(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  const submitButton = form.querySelector('button[type="submit"]');
+  const originalText = submitButton ? submitButton.textContent : '';
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = 'Đang gửi...';
+  }
+
+  setTimeout(() => {
+    const dialog = form.closest('.mockup-dialog');
+    const data = Array.from(new FormData(form).entries())
+      .filter(([, value]) => String(value).trim())
+      .slice(0, 5);
+    const summary = data.map(([key, value]) => `
+      <div>
+        <span>${escapeHtml(key)}</span>
+        <strong>${escapeHtml(value)}</strong>
+      </div>
+    `).join('');
+    const successTitle = form.dataset.successTitle || 'Đã nhận thông tin';
+    const successMessage = form.dataset.successMessage || 'Thông tin sẽ được gửi về phía Restioo. Đội ngũ sẽ phản hồi sau khi rà soát.';
+
+    dialog.querySelector('.mockup-body').innerHTML = `
+      <div class="mockup-success" data-audit="${mockupSuccessAuditText}">
+        <div class="mockup-success-icon"><i data-lucide="check"></i></div>
+        <h3>${successTitle}</h3>
+        <p>${successMessage}</p>
+        ${summary ? `<div class="mockup-success-summary">${summary}</div>` : ''}
+        <button class="modal-confirm-btn" type="button">Hoàn tất</button>
+      </div>
+    `;
+
+    const doneButton = dialog.querySelector('.mockup-success button');
+    doneButton.addEventListener('click', () => dialog.closest('.mockup-overlay').querySelector('.mockup-close').click());
+    showToast('Thông tin đã được ghi nhận trong mockup local.', 'success');
+    if (window.lucide) window.lucide.createIcons();
+  }, 650);
+
+  setTimeout(() => {
+    if (submitButton && document.body.contains(submitButton)) {
+      submitButton.disabled = false;
+      submitButton.textContent = originalText;
+    }
+  }, 900);
+}
+
+function openB2BMockup() {
+  createMockupOverlay(`
+    <div class="mockup-body">
+      <div class="mockup-grid">
+        <aside class="mockup-visual-panel">
+          <span class="mockup-kicker">Restioo B2B</span>
+          <h2>Đăng ký hợp tác triển khai pod</h2>
+          <p>Mockup này mô phỏng luồng tiếp nhận lead B2B: chủ tòa nhà, co-working, trường học hoặc doanh nghiệp gửi nhu cầu về phía Restioo.</p>
+          <div class="mockup-note">
+            <i data-lucide="building-2"></i>
+            <span>Thông tin sau khi gửi sẽ được ghi nhận dạng demo trên giao diện local.</span>
+          </div>
+        </aside>
+        <form class="mockup-form" data-mockup-form data-success-title="Đã ghi nhận đề xuất hợp tác" data-success-message="Thông tin sẽ được gửi về phía Restioo. Nhóm B2B sẽ phản hồi trong 24 giờ làm việc.">
+          <label>Tên công ty / đơn vị
+            <input name="Tên công ty" required placeholder="VD: Công ty ABC" autocomplete="organization">
+          </label>
+          <label>Người liên hệ
+            <input name="Người liên hệ" required placeholder="Họ và tên" autocomplete="name">
+          </label>
+          <div class="mockup-form-row">
+            <label>Số điện thoại
+              <input name="Số điện thoại" required placeholder="09..." autocomplete="tel">
+            </label>
+            <label>Email
+              <input name="Email" type="email" required placeholder="name@company.vn" autocomplete="email">
+            </label>
+          </div>
+          <label>Loại địa điểm
+            <select name="Loại địa điểm" required>
+              <option value="">Chọn loại địa điểm</option>
+              <option>Tòa nhà văn phòng</option>
+              <option>Co-working space</option>
+              <option>Trường đại học</option>
+              <option>Doanh nghiệp nội bộ</option>
+            </select>
+          </label>
+          <label>Nhu cầu triển khai
+            <textarea name="Nhu cầu" rows="3" placeholder="Số lượng pod, vị trí, thời gian dự kiến..."></textarea>
+          </label>
+          <button class="btn-primary" type="submit">Gửi thông tin hợp tác</button>
+        </form>
+      </div>
+    </div>
+  `, { label: 'Đăng ký hợp tác B2B' });
+}
+
+function openNewsletterMockup() {
+  createMockupOverlay(`
+    <div class="mockup-body">
+      <div class="mockup-newsletter">
+        <div>
+          <span class="mockup-kicker">Early Access</span>
+          <h2>Nhận thông tin ra mắt Restioo</h2>
+          <p>Đăng ký để nhận cập nhật về địa điểm mới, ưu đãi early adopters và lịch mở trải nghiệm.</p>
+        </div>
+        <form class="mockup-form mockup-form-inline" data-mockup-form data-success-title="Đã đăng ký nhận thông tin" data-success-message="Thông tin sẽ được gửi về phía Restioo. Khi có đợt trải nghiệm mới, Restioo sẽ gửi thông báo đến email của bạn.">
+          <label>Email
+            <input name="Email" type="email" required placeholder="email@example.com" autocomplete="email">
+          </label>
+          <label>Nhóm quan tâm
+            <select name="Nhóm quan tâm" required>
+              <option>Người dùng cá nhân</option>
+              <option>Đối tác địa điểm</option>
+              <option>Truyền thông</option>
+            </select>
+          </label>
+          <button class="btn-primary" type="submit">Đăng ký nhận tin</button>
+        </form>
+      </div>
+    </div>
+  `, { label: 'Đăng ký nhận thông tin sớm', dialogClass: 'mockup-dialog-narrow' });
+}
+
+function openBookingMockup() {
+  createMockupOverlay(`
+    <div class="mockup-body">
+      <div class="mockup-grid booking-mockup">
+        <aside class="mock-phone" aria-label="Màn hình đặt chỗ mockup">
+          <div class="mock-phone-top">
+            <span>9:41</span>
+            <strong>Restioo</strong>
+          </div>
+          <div class="mock-pod-card">
+            <div>
+              <span>Pod A2</span>
+              <h3>PTIT Hà Đông</h3>
+            </div>
+            <span class="mock-status"><i class="mock-status-dot"></i>Đang trống</span>
+          </div>
+          <div class="mock-time-grid">
+            <button type="button">15'</button>
+            <button type="button" class="active">30'</button>
+            <button type="button">45'</button>
+            <button type="button">60'</button>
+          </div>
+          <div class="mock-qr">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </aside>
+        <form class="mockup-form" data-mockup-form data-success-title="Đặt chỗ mockup thành công" data-success-message="Thông tin sẽ được gửi về phía Restioo. Mã QR check-in demo đã được tạo trong mockup local.">
+          <span class="mockup-kicker">Booking Flow</span>
+          <h2>Đặt chỗ nghỉ nhanh</h2>
+          <label>Địa điểm
+            <select name="Địa điểm" required>
+              <option>PTIT Hà Đông - Pod A2</option>
+              <option>Tòa nhà văn phòng - Pod B1</option>
+              <option>Co-working Hub - Pod C3</option>
+            </select>
+          </label>
+          <div class="mockup-form-row">
+            <label>Thời lượng
+              <select name="Thời lượng" required>
+                <option>15 phút</option>
+                <option selected>30 phút</option>
+                <option>45 phút</option>
+                <option>60 phút</option>
+              </select>
+            </label>
+            <label>Giờ bắt đầu
+              <input name="Giờ bắt đầu" type="time" required value="12:30">
+            </label>
+          </div>
+          <div class="mockup-form-row">
+            <label>Nhiệt độ
+              <select name="Nhiệt độ">
+                <option>22°C</option>
+                <option>24°C</option>
+                <option>26°C</option>
+              </select>
+            </label>
+            <label>Âm thanh
+              <select name="Âm thanh">
+                <option>Yên tĩnh</option>
+                <option>White noise</option>
+                <option>Rain focus</option>
+              </select>
+            </label>
+          </div>
+          <div class="mockup-note">
+            <i data-lucide="wallet-cards"></i>
+            <span>Thanh toán đang là mockup. Khi triển khai thật có thể nối MoMo, ZaloPay hoặc thẻ.</span>
+          </div>
+          <button class="btn-primary" type="submit">Thanh toán mock & nhận QR</button>
+        </form>
+      </div>
+    </div>
+  `, { label: 'Đặt chỗ Restioo' });
+}
+
+function openAppWaitlistMockup() {
+  openNewsletterMockup();
+}
+
+function openServiceJourney() {
+  const { overlay } = createMockupOverlay(`
+    <div class="journey-stage">
+      <div class="pod-corridor" aria-hidden="true">
+        <div class="corridor-wall corridor-left"></div>
+        <div class="corridor-wall corridor-right"></div>
+        <div class="corridor-floor"></div>
+        <div class="corridor-light light-one"></div>
+        <div class="corridor-light light-two"></div>
+        <div class="corridor-pod-door">
+          <span></span>
+          <strong>Restioo Pod</strong>
+        </div>
+        <div class="corridor-hud hud-one"><i data-lucide="wind"></i> HEPA Air</div>
+        <div class="corridor-hud hud-two"><i data-lucide="thermometer"></i> 22°C</div>
+        <div class="corridor-hud hud-three"><i data-lucide="moon"></i> Quiet mode</div>
+      </div>
+      <div class="journey-copy">
+        <span class="mockup-kicker">Khám phá dịch vụ</span>
+        <h2>Đi qua hành trình nghỉ 30 phút</h2>
+        <p>Góc nhìn mô phỏng đưa người xem từ khu vực văn phòng vào pod, sau đó hiện các lớp thông tin chính của dịch vụ.</p>
+        <div class="journey-actions">
+          <button class="btn-primary" type="button" data-journey-reveal>Xem thông tin dịch vụ</button>
+          <button class="btn-ghost" type="button" data-journey-book>Thử đặt chỗ</button>
+        </div>
+      </div>
+      <section class="journey-info" tabindex="-1">
+        <h3>Dịch vụ Restioo gồm những gì?</h3>
+        <div class="journey-service-grid">
+          <article>
+            <i data-lucide="scan-qr-code"></i>
+            <strong>Đặt chỗ và QR check-in</strong>
+            <span>Người dùng chọn pod, thời lượng, thanh toán và nhận mã vào khoang.</span>
+          </article>
+          <article>
+            <i data-lucide="sliders-horizontal"></i>
+            <strong>Cá nhân hóa môi trường</strong>
+            <span>Lưu cấu hình nhiệt độ, ánh sáng, âm thanh và chế độ yên tĩnh.</span>
+          </article>
+          <article>
+            <i data-lucide="activity"></i>
+            <strong>Quản lý trạng thái pod</strong>
+            <span>Pod có trạng thái trống, đang dùng, bảo trì hoặc vệ sinh theo thời gian thực.</span>
+          </article>
+        </div>
+      </section>
+    </div>
+  `, {
+    className: 'service-journey-overlay mockup-overlay-wide',
+    dialogClass: 'service-journey-dialog',
+    label: 'Hành trình khám phá dịch vụ Restioo'
+  });
+
+  const stage = overlay.querySelector('.journey-stage');
+  const info = overlay.querySelector('.journey-info');
+  const revealInfo = () => {
+    stage.classList.add('show-info');
+    setTimeout(() => info.focus({ preventScroll: true }), 250);
+  };
+
+  requestAnimationFrame(() => stage.classList.add('is-moving'));
+  setTimeout(() => {
+    if (document.body.contains(overlay)) revealInfo();
+  }, 1500);
+
+  overlay.querySelector('[data-journey-reveal]').addEventListener('click', revealInfo);
+  overlay.querySelector('[data-journey-book]').addEventListener('click', () => {
+    overlay.querySelector('.mockup-close').click();
+    openBookingMockup();
+  });
 }
 
 // Mobile menu toggle - Initialize only once
@@ -291,35 +642,54 @@ function addButtonHandlers() {
   ctaButtons.forEach(btn => {
     // Skip email signup buttons
     if (btn.classList.contains('email-signup-btn')) return;
+    if (btn.hasAttribute('onclick')) return;
     
     btn.addEventListener('click', function(e) {
       const text = this.textContent.trim();
-      // Add loading animation
-      const originalText = this.textContent;
+      const actionText = normalizeActionText(text);
+      const originalHtml = this.innerHTML;
       this.classList.add('btn-loading');
       this.disabled = true;
       
       setTimeout(() => {
         this.classList.remove('btn-loading');
         this.disabled = false;
-        this.textContent = originalText;
-      }, 800);
-      
-      if (text.includes('Tải App') || text.includes('Khám phá')) {
-        showToast('Tính năng sắp có mặt! Vui lòng theo dõi...', 'info');
-      } else if (text.includes('Xem review')) {
-        openVideoModal();
-      } else if (text.includes('Đặt chỗ')) {
-        showModal('Đặt chỗ sử dụng Pod', 'Mở ứng dụng Restioo để đặt chỗ ngay. Hiện tại, tính năng đặt chỗ trực tuyến đang trong giai đoạn beta.', 'showToast("Đã chuyển hướng tới app!", "info")');
-      } else if (text.includes('Liên lạc') || text.includes('Liên hệ')) {
-        showToast('Email được sao chép: info@restioo.vn', 'success');
-        navigator.clipboard.writeText('info@restioo.vn');
-      } else if (text.includes('B2B')) {
-        showModal('Hợp tác B2B', 'Email hợp tác: info@restioo.vn\n\nChúng tôi sẽ liên hệ bạn sớm nhất!', 'showToast("Email hợp tác được sao chép", "success")');
-        navigator.clipboard.writeText('info@restioo.vn');
-      } else if (text.includes('Liên hệ') || text.includes('Đăng ký')) {
-        showToast('Cảm ơn bạn quan tâm! Chúng tôi sẽ liên hệ sớm.', 'success');
+        this.innerHTML = originalHtml;
+        if (window.lucide) window.lucide.createIcons();
+      }, 450);
+
+      if (actionText.includes('kham pha')) {
+        openServiceJourney();
+        return;
       }
+      if (actionText.includes('xem review')) {
+        openVideoModal();
+        return;
+      }
+      if (actionText.includes('dat cho')) {
+        openBookingMockup();
+        return;
+      }
+      if (actionText.includes('tai app')) {
+        openAppWaitlistMockup();
+        return;
+      }
+      if (actionText.includes('b2b') || actionText.includes('hop tac')) {
+        openB2BMockup();
+        return;
+      }
+      if (actionText.includes('dang ky nhan thong tin') || actionText.includes('dang ky thong bao') || actionText.includes('newsletter') || actionText.includes('dang ky')) {
+        openNewsletterMockup();
+        return;
+      }
+      if (actionText.includes('lien lac') || actionText.includes('lien he')) {
+        showToast('Email được sao chép: info@restioo.vn', 'success');
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText('info@restioo.vn').catch(() => {});
+        }
+        return;
+      }
+
     });
   });
   
