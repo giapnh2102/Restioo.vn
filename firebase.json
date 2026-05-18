@@ -7,6 +7,28 @@
       "**/node_modules/**",
       "firebase-debug.log"
     ],
+    "redirects": [
+      {
+        "source": "/.git/**",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/firebase.json",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/tests/**",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/webapp/**",
+        "destination": "/",
+        "type": 301
+      }
+    ],
     "rewrites": [
       {
         "source": "**",

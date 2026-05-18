@@ -11,6 +11,12 @@ const appSource = readFileSync(join(root, 'webapp/src/App.tsx'), 'utf8');
 const dataSource = readFileSync(join(root, 'webapp/src/data/restiooData.ts'), 'utf8');
 
 assert.equal(firebaseConfig.hosting.public, 'webapp/dist');
+assert.deepEqual(firebaseConfig.hosting.redirects, [
+  { source: '/.git/**', destination: '/', type: 301 },
+  { source: '/firebase.json', destination: '/', type: 301 },
+  { source: '/tests/**', destination: '/', type: 301 },
+  { source: '/webapp/**', destination: '/', type: 301 },
+]);
 assert.deepEqual(firebaseConfig.hosting.rewrites, [{ source: '**', destination: '/index.html' }]);
 assert.equal(webappPackage.scripts.build, 'tsc --noEmit && vite build');
 assert.match(appSource, /path="\/app"/);
