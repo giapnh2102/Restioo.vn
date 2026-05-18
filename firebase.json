@@ -1,20 +1,17 @@
 {
   "hosting": {
-    "public": ".",
+    "public": "webapp/dist",
     "ignore": [
       "firebase.json",
       "**/.*",
-      ".git",
-      ".git/**",
-      "**/.git/**",
-      ".firebase",
-      ".firebase/**",
-      ".firebaserc",
-      ".gitignore",
       "**/node_modules/**",
-      "README.md",
-      "tests/**",
       "firebase-debug.log"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
   }
 }
