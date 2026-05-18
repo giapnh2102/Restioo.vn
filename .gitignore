@@ -1,10 +1,2 @@
 .firebase/
 firebase-debug.log
-node_modules/
-dist/
-webapp/node_modules/
-webapp/dist/
-webapp/.vite/
-webapp/output/
-*.tsbuildinfo
-*.log
